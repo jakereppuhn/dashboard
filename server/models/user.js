@@ -34,16 +34,16 @@ module.exports = (sequelize, DataTypes) => {
 		},
 	});
 
-	// User.associate = function (models) {
-	// 	User.hasMany(models.Product, {
-	// 		foreignKey: 'userId',
-	// 		as: 'products',
-	// 	});
-	// 	User.hasMany(models.Purchase, {
-	// 		foreignKey: 'userId',
-	// 		as: 'purchases',
-	// 	});
-	// };
+	User.associate = function (models) {
+		User.hasMany(models.Product, {
+			foreignKey: 'userId',
+			as: 'products',
+		});
+		// User.hasMany(models.Purchase, {
+		// 	foreignKey: 'userId',
+		// 	as: 'purchases',
+		// });
+	};
 
 	return User;
 };

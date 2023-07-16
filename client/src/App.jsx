@@ -6,6 +6,7 @@ import {
 	Navigate,
 	useLocation,
 } from 'react-router-dom';
+import { Dashboard } from './pages';
 
 const ProtectedRoutes = () => {
 	const { user } = { user: 'user' };
@@ -20,6 +21,11 @@ const ProtectedRoutes = () => {
 	return (
 		<Routes>
 			<Route path="/" element={user ? '' : <Navigate to="" />} />
+
+			<Route
+				path="/dashboard"
+				element={user ? <Dashboard /> : <Navigate to="/signin" />}
+			/>
 		</Routes>
 	);
 };

@@ -2,21 +2,21 @@
 	"development": {
 		"username": "root",
 		"password": "localhost",
-		"database": "DashboardDB",
+		"database": "dashboardDB",
 		"host": "localhost",
 		"dialect": "mysql"
 	},
 	"test": {
 		"username": "root",
 		"password": "localhost",
-		"database": "DashboardDB",
+		"database": "dashboardDB",
 		"host": "localhost",
 		"dialect": "mysql"
 	},
 	"production": {
 		"username": "root",
 		"password": "localhost",
-		"database": "DashboardDB",
+		"database": "dashboardDB",
 		"host": "localhost",
 		"dialect": "mysql"
 	}

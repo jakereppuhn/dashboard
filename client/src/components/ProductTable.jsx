@@ -66,7 +66,7 @@ const ProductTable = ({ products, isGridView }) => {
 				<table className="min-w-full table-auto">
 					<thead className="bg-gray-200">
 						<tr>
-							<th className="w-1/6 py-2 text-center">Product</th>
+							<th className="w-1/6 py-2 text-center">Name</th>
 							<th className="w-1/6 py-2 text-center">Category</th>
 							<th className="w-1/6 py-2 text-center">Stock</th>
 							<th className="w-1/6 py-2 text-center">Sold</th>

@@ -1,28 +1,58 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuthContext } from '../user/useAuthContext';
 
-export const useGetProducts = () => {
+export const useGetAllProducts = (sortBy) => {
 	const [products, setProducts] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 
-	const getProducts = async () => {
-		setIsLoading(true);
-		axios
-			.get('http://localhost:3001/api/products')
-			.then((response) => {
-				if (response.data.error) {
-					setError(response.data.error);
-				} else {
-					setProducts(response.data);
-				}
-				setIsLoading(false);
-			})
-			.catch((err) => {
-				setError(err.message || 'An error occurred');
-				setIsLoading(false);
-			});
-	};
+	const { user } = useAuthContext();
 
-	return { getProducts, products, isLoading, error };
+	useEffect(() => {
+		const fetchProducts = async () => {
+			setIsLoading(true);
+			try {
+				const { data } = await axios.get('http://localhost:3001/api/product', {
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				});
+				const sortedData = data.sort((a, b) => a.name.localeCompare(b.name));
+				setProducts(sortedData);
+			} catch (err) {
+				setError(err);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		fetchProducts();
+	}, []);
+
+	useEffect(() => {
+		const sortedProducts = [...products].sort((a, b) => {
+			let compareA, compareB;
+
+			if (sortBy === 'category a-z' || sortBy === 'category z-a') {
+				compareA = a.categoryId ? a.categoryId : '~';
+				compareB = b.categoryId ? b.categoryId : '~';
+			} else {
+				compareA = a.name.toUpperCase();
+				compareB = b.name.toUpperCase();
+			}
+
+			if (sortBy.endsWith('a-z')) {
+				return compareA < compareB ? -1 : compareA > compareB ? 1 : 0;
+			} else if (sortBy.endsWith('z-a')) {
+				return compareA > compareB ? -1 : compareA < compareB ? 1 : 0;
+			}
+
+			return 0;
+		});
+
+		setProducts(sortedProducts);
+	}, [sortBy]);
+
+	return { products, error, isLoading };
 };

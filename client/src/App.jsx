@@ -25,7 +25,13 @@ const ProtectedRoutes = () => {
 
 			<Route
 				path="/signin"
-				element={!user ? <SignIn /> : <Navigate to={'/dashboard'} />}
+				element={
+					!user ? (
+						<SignIn />
+					) : (
+						<Navigate to={sessionStorage.getItem('redirectPath') || '/'} />
+					)
+				}
 			/>
 
 			<Route

@@ -1,16 +1,16 @@
 import { useState } from 'react';
 import { Layout, ProductTable } from '../components';
-import { useGetProducts } from '../hooks/product/useGetProducts';
+import { useGetAllProducts } from '../hooks/product/useGetProducts';
 
 const Product = () => {
 	const [isGridView, setIsGridView] = useState(false);
 	const [sortBy, setSortBy] = useState('name a-z');
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	// const [isModalOpen, setIsModalOpen] = useState(false);
 
-	const { products, error, isLoading } = useGetProducts(sortBy);
+	const { products } = useGetAllProducts(sortBy);
 
-	const openModal = () => setIsModalOpen(true);
-	const closeModal = () => setIsModalOpen(false);
+	// const openModal = () => setIsModalOpen(true);
+	// const closeModal = () => setIsModalOpen(false);
 
 	const toggleView = () => {
 		setIsGridView(!isGridView);
@@ -62,31 +62,28 @@ const Product = () => {
 
 	return (
 		<Layout>
-			<div className="w-full h-screen flex pl-60 pt-16">
-				<main className="w-full p-6">
-					<div className="flex items-center justify-between mb-4">
-						<h2 className="text-2xl font-semibold text-gray-700">Inventory</h2>
-						<div className="flex gap-4">
-							<SortSelect />
-							<div className=" inline-block w-14 align-middle select-none transition duration-200 ease-in z-10">
-								<input
-									type="checkbox"
-									id="view-switch"
-									className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
-									checked={isGridView}
-									onChange={toggleView}
-								/>
-								<label
-									htmlFor="view-switch"
-									className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-							</div>
-							{/* <Button text="New Product" onClick={openModal} /> */}
+			<main className="w-full p-6">
+				<div className="flex items-center justify-between mb-4">
+					<h2 className="text-2xl font-semibold text-gray-700">Inventory</h2>
+					<div className="flex gap-4">
+						<SortSelect />
+						<div className=" inline-block w-14 align-middle select-none transition duration-200 ease-in z-10">
+							<input
+								type="checkbox"
+								id="view-switch"
+								className="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"
+								checked={isGridView}
+								onChange={toggleView}
+							/>
+							<label
+								htmlFor="view-switch"
+								className="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
 						</div>
+						{/* <Button text="New Product" onClick={openModal} /> */}
 					</div>
-					<ProductTable products={products} isGridView={isGridView} />
-				</main>
-			</div>
-			{/* <CreateProductModal isOpen={isModalOpen} onClose={closeModal} /> */}
+				</div>
+				<ProductTable products={products} isGridView={isGridView} />
+			</main>
 		</Layout>
 	);
 };

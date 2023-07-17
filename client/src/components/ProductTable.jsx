@@ -12,7 +12,9 @@ const CategoryName = ({ categoryId, categories }) => {
 	}
 
 	return (
-		<span className={`py-1.5 px-4 rounded-full bg-[#${category.hex}]`}>
+		<span
+			className={`py-1.5 px-4 rounded-full`}
+			style={{ backgroundColor: `#${category.hex}` }}>
 			{category.name}
 		</span>
 	);
@@ -32,7 +34,7 @@ const ProductTable = ({ products, isGridView }) => {
 	const renderGridItem = (product) => (
 		<div className="border p-4 m-2 w-60">
 			<p className="font-bold">
-				<Link to={`/inventory/${product.id}`} className="hover:underline">
+				<Link to={`/products/${product.id}`} className="hover:underline">
 					{product.name}
 				</Link>
 			</p>
@@ -43,7 +45,7 @@ const ProductTable = ({ products, isGridView }) => {
 					categories={categories}
 				/>
 			</p>
-			<p>Stock: {product.stock}</p>
+			<p>Stock: {product.currentStock}</p>
 			<p>Sold: {product.sold}</p>
 			<p>Revenue: ${product.revenue}</p>
 			<p>Profit: ${product.profit}</p>
@@ -80,7 +82,7 @@ const ProductTable = ({ products, isGridView }) => {
 									onClick={() => toggleExpandedRow(index)}>
 									<td className="w-1/6 py-2 text-center">
 										<Link
-											to={`/inventory/${item.id}`}
+											to={`/products/${item.id}`}
 											className="hover:underline">
 											{item.name}
 										</Link>
@@ -92,10 +94,16 @@ const ProductTable = ({ products, isGridView }) => {
 											categories={categories}
 										/>
 									</td>
-									<td className="w-1/6 py-2 text-center">{item.stock}</td>
-									<td className="w-1/6 py-2 text-center">{item.sold}</td>
-									<td className="w-1/6 py-2 text-center">${item.revenue}</td>
-									<td className="w-1/6 py-2 text-center">${item.profit}</td>
+									<td className="w-1/6 py-2 text-center">
+										{item.currentStock}
+									</td>
+									<td className="w-1/6 py-2 text-center">{item.stockSold}</td>
+									<td className="w-1/6 py-2 text-center">
+										${item.totalRevenue}
+									</td>
+									<td className="w-1/6 py-2 text-center">
+										${item.totalProfit}
+									</td>
 								</tr>
 								{expandedRowIndex === index && (
 									<tr className={index % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>

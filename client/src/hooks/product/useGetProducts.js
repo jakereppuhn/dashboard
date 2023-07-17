@@ -34,13 +34,8 @@ export const useGetAllProducts = (sortBy) => {
 		const sortedProducts = [...products].sort((a, b) => {
 			let compareA, compareB;
 
-			if (sortBy === 'category a-z' || sortBy === 'category z-a') {
-				compareA = a.categoryId ? a.categoryId : '~';
-				compareB = b.categoryId ? b.categoryId : '~';
-			} else {
-				compareA = a.name.toUpperCase();
-				compareB = b.name.toUpperCase();
-			}
+			compareA = a.name.toUpperCase();
+			compareB = b.name.toUpperCase();
 
 			if (sortBy.endsWith('a-z')) {
 				return compareA < compareB ? -1 : compareA > compareB ? 1 : 0;

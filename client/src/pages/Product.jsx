@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CreateProductModal, Layout, ProductTable } from '../components';
+import { ProductForm, Layout, ProductTable } from '../components';
 import { useGetAllProducts } from '../hooks/product/useGetProducts';
 
 const Product = () => {
@@ -63,7 +63,7 @@ const Product = () => {
 	return (
 		<Layout>
 			<button onClick={openModal}>New Product</button>
-			<button onClick={''}>New Category</button>
+			{/* <button onClick={''}>New Category</button> */}
 			<div className="flex items-center justify-between mb-4">
 				<h2 className="text-2xl font-semibold text-gray-700">Products</h2>
 				<div className="flex gap-4">
@@ -83,7 +83,7 @@ const Product = () => {
 				</div>
 			</div>
 			<ProductTable products={products} isGridView={isGridView} />
-			<CreateProductModal isOpen={isModalOpen} onClose={closeModal} />
+			<ProductForm isOpen={isModalOpen} onClose={closeModal} />
 		</Layout>
 	);
 };

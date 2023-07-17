@@ -15,11 +15,9 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 const userRoutes = require('./routes/userRoutes');
-const categoryRoutes = require('./routes/categoryRoutes');
 const productRoutes = require('./routes/productRoutes');
 
 app.use('/api/user', userRoutes);
-app.use('/api/category', categoryRoutes);
 app.use('/api/product', productRoutes);
 
 sequelize

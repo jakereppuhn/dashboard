@@ -1,4 +1,3 @@
-// Product.js
 module.exports = (sequelize, DataTypes) => {
 	const Product = sequelize.define('Product', {
 		id: {
@@ -34,10 +33,6 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: {},
 		},
-		categoryId: {
-			type: DataTypes.BIGINT,
-			allowNull: true,
-		},
 		isArchived: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,
@@ -50,26 +45,6 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		currentStock: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		stockPurchased: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		stockSold: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		stockLost: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		averageCost: {
-			type: DataTypes.DECIMAL(10, 2),
 			allowNull: false,
 			defaultValue: 0,
 		},
@@ -91,10 +66,6 @@ module.exports = (sequelize, DataTypes) => {
 	});
 
 	Product.associate = (models) => {
-		Product.belongsTo(models.Category, {
-			foreignKey: 'categoryId',
-			as: 'category',
-		});
 		Product.belongsTo(models.User, {
 			foreignKey: 'userId',
 			as: 'user',

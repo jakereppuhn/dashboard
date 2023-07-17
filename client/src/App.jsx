@@ -6,10 +6,11 @@ import {
 	Navigate,
 	useLocation,
 } from 'react-router-dom';
-import { Dashboard } from './pages';
+import { Dashboard, SignIn } from './pages';
+import { useAuthContext } from './hooks/user/useAuthContext';
 
 const ProtectedRoutes = () => {
-	const { user } = { user: 'user' };
+	const { user } = useAuthContext();
 	const location = useLocation();
 
 	useEffect(() => {
@@ -21,6 +22,11 @@ const ProtectedRoutes = () => {
 	return (
 		<Routes>
 			<Route path="/" element={user ? '' : <Navigate to="" />} />
+
+			<Route
+				path="/signin"
+				element={!user ? <SignIn /> : <Navigate to={'/dashboard'} />}
+			/>
 
 			<Route
 				path="/dashboard"

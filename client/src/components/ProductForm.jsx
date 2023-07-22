@@ -108,6 +108,16 @@ const ProductForm = ({ isOpen, onClose }) => {
 									onChange={handleInputChange(setSku)}
 								/>
 							</div>
+							<div className="flex gap-2 w-1/3">
+								<label htmlFor="qty">Qty:</label>
+								<input
+									id="qty"
+									min={0}
+									className="w-full border-2 border-gray-100 rounded"
+									type="number"
+									onChange={handleInputChange(setInitialStock)}
+								/>
+							</div>
 						</div>
 
 						<div className="flex gap-2 w-full">
@@ -167,6 +177,16 @@ const ProductForm = ({ isOpen, onClose }) => {
 									type="time"
 									value={time}
 									onChange={handleInputChange(setTime)}
+								/>
+							</div>
+							<div className="flex gap-2 w-1/4">
+								<label htmlFor="qty">Qty:</label>
+								<input
+									id="qty"
+									min={0}
+									className="w-full border-2 border-gray-100 rounded"
+									type="number"
+									onChange={handleInputChange(setInitialStock)}
 								/>
 							</div>
 						</div>

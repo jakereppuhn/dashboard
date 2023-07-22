@@ -14,7 +14,7 @@ const Layout = ({ children }) => {
 			{showSidebar && <Sidebar show={showSidebar} />}
 			<div className={`flex flex-col w-full ${showSidebar ? 'ml-60' : ''}`}>
 				<Navbar toggleSidebar={toggleSidebar} />
-				<main className="py-6 px-8 overflow-y-auto h-full bg-bg-light">
+				<main className="overflow-y-auto flex-auto bg-bg-light">
 					{children}
 				</main>
 			</div>

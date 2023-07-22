@@ -36,7 +36,7 @@ const ProtectedRoutes = () => {
 
 			<Route
 				path="/dashboard"
-				element={user ? <Dashboard /> : <Navigate to="/signin" />}
+				element={user ? <Dashboard user={user}/> : <Navigate to="/signin" />}
 			/>
 
 			<Route

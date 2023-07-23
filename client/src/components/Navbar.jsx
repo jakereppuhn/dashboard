@@ -60,7 +60,7 @@ const Navbar = ({ toggleSidebar }) => {
 								alt="FlowBite Logo"
 							/>
 							<span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-								Dashboard
+								Flip Genius
 							</span>
 						</Link>
 						<form action="#" method="GET" className="hidden lg:block lg:pl-2">
@@ -522,9 +522,7 @@ const Navbar = ({ toggleSidebar }) => {
 						<button
 							type="button"
 							className="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-							id="user-menu-button"
-							aria-expanded="false"
-							data-dropdown-toggle="dropdown">
+							id="user-menu-button">
 							<span className="sr-only">Open user menu</span>
 							<img
 								className="w-8 h-8 rounded-full"
@@ -538,7 +536,7 @@ const Navbar = ({ toggleSidebar }) => {
 							id="dropdown">
 							<div className="py-3 px-4">
 								<span className="block text-sm font-semibold text-gray-900 dark:text-white">
-									Neil sims
+									{user.name}
 								</span>
 								<span className="block text-sm font-light text-gray-500 truncate dark:text-gray-400">
 									name@flowbite.com

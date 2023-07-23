@@ -120,8 +120,8 @@ const DatePicker = () => {
 	}, []);
 
 	return (
-		<div className="relative lg:w-96">
-			<div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+		<div className="relative w-1/4 pl-3">
+			<div className="flex absolute inset-y-0 left-0 items-center pl-5 pointer-events-none">
 				<svg
 					fill="none"
 					stroke="currentColor"

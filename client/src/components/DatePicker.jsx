@@ -66,24 +66,21 @@ const DatePicker = () => {
 	};
 
 	const handlePrevMonth = () => {
-		setSelectedMonth((prevMonth) => {
-			if (prevMonth === 1) {
-				setSelectedYear((prevYear) => prevYear - 1);
-				return 12;
-			}
-			return prevMonth - 1;
-		});
+		if (selectedMonth === 1) {
+			setSelectedYear((prevYear) => prevYear - 1);
+			setSelectedMonth(12);
+		} else {
+			setSelectedMonth((prevMonth) => prevMonth - 1);
+		}
 	};
 
 	const handleNextMonth = () => {
-		setSelectedMonth((prevMonth) => {
-			if (prevMonth === 12) {
-				setSelectedYear((prevYear) => prevYear + 1);
-				return 1;
-			} else {
-				return prevMonth + 1;
-			}
-		});
+		if (selectedMonth === 12) {
+			setSelectedYear((prevYear) => prevYear + 1);
+			setSelectedMonth(1);
+		} else {
+			setSelectedMonth((prevMonth) => prevMonth + 1);
+		}
 	};
 
 	useEffect(() => {
@@ -91,14 +88,12 @@ const DatePicker = () => {
 		const firstDayOfWeek = daysArray[0].getDay();
 		const lastDayOfWeek = daysArray[daysArray.length - 1].getDay();
 
-		// include days from the previous month
 		if (firstDayOfWeek > 0) {
 			for (let i = 1; i <= firstDayOfWeek; i++) {
 				daysArray.unshift(new Date(selectedYear, selectedMonth - 1, -i));
 			}
 		}
 
-		// include days from the next month
 		if (lastDayOfWeek < 6) {
 			for (let i = 1; i <= 6 - lastDayOfWeek; i++) {
 				daysArray.push(new Date(selectedYear, selectedMonth, i));
@@ -252,7 +247,10 @@ const DatePicker = () => {
 												</svg>
 											</button>
 											<div className="text-sm font-semibold">
-												{selectedMonth.toLocaleString('default', {
+												{new Date(
+													selectedYear,
+													selectedMonth - 1
+												).toLocaleString('default', {
 													month: 'long',
 													year: 'numeric',
 												})}
@@ -294,13 +292,6 @@ const DatePicker = () => {
 											<span className="flex items-center justify-center w-10 h-10 font-semibold rounded-lg">
 												Sa
 											</span>
-											{/* {previousMonthDays.map((date) => (
-												<button key={date.toISOString()}>
-													<span className="flex items-center justify-center w-10 h-10 font-semibold rounded-xl text-gray-600 hover:bg-blue-500">
-														{date.getDate()}
-													</span>
-												</button>
-											))} */}
 											{monthDays.map((date) => (
 												<button key={date.toISOString()}>
 													<span

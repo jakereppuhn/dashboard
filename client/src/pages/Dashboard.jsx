@@ -1,15 +1,15 @@
-import { useState } from 'react';
 import { Layout } from '../components';
 import BarChart from '../components/charts/barChart';
-import CardChart from '../components/charts/cardChart';
+import CardChart from '../components/charts/CardChart';
+import DatePicker from '../components/DatePicker';
 
 const Dashboard = () => {
 	const totalRevenue = {
-		labels: [1, 2, 1, 3, 5, 4, 7],
+		labels: [1, 2, 3, 4, 5, 6, 7],
 		datasets: [
 			{
 				data: [15000, 16500, 18000, 17000, 17500, 18500, 20000],
-				backgroundColor: 'rgba(102, 126, 234, 0.25)',
+				backgroundColor: '#ffffff',
 				borderColor: 'rgba(102, 126, 234, 1)',
 				pointBackgroundColor: 'rgba(102, 126, 234, 1)',
 				borderWidth: 3,
@@ -64,14 +64,17 @@ const Dashboard = () => {
 		<Layout>
 			<div className="p-8">
 				<div className="mx-auto -my-4">
-					<div className="w-full flex justify-end mb-4"></div>
+					<div className="w-full flex justify-between mb-4">
+						<h1 className="text-2xl dark:text-white">Dashboard</h1>
+						<DatePicker />
+					</div>
 					<div className="flex flex-wrap -m-4">
 						<div className="w-full md:w-1/2 lg:w-1/4 p-4 relative flex items-center justify-center">
 							<div className="text-center absolute z-10">
 								<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
 									Total Revenue
 								</h4>
-								<p className="mb-1 text-4xl font-bold dark:text-white">
+								<p className="mb-1 text-4xl font-bold dark:text-white bg-gray-800 px-4">
 									$ 27,342.43
 								</p>
 								<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">

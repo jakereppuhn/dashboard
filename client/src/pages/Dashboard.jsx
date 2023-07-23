@@ -60,35 +60,11 @@ const Dashboard = () => {
 		],
 	};
 
-	const [dateRange, setDateRange] = useState('24h');
-	const [startDate, setStartDate] = useState('');
-	const [endDate, setEndDate] = useState('');
-
 	return (
 		<Layout>
 			<div className="p-8">
-				<div className="mx-auto">
-					<div className="w-full flex justify-end mb-4">
-						<div class="relative max-w-sm">
-							<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-								<svg
-									class="w-4 h-4 text-gray-500 dark:text-gray-400"
-									aria-hidden="true"
-									xmlns="http://www.w3.org/2000/svg"
-									fill="currentColor"
-									viewBox="0 0 20 20">
-									<path d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
-								</svg>
-							</div>
-							<input
-								datepicker
-								datepicker-orientation="bottom right"
-								type="text"
-								class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-								placeholder="Select date"
-							/>
-						</div>
-					</div>
+				<div className="mx-auto -my-4">
+					<div className="w-full flex justify-end mb-4"></div>
 					<div className="flex flex-wrap -m-4">
 						<div className="w-full md:w-1/2 lg:w-1/4 p-4 relative flex items-center justify-center">
 							<div className="text-center absolute z-10">
@@ -102,7 +78,7 @@ const Dashboard = () => {
 									+ 5.00%
 								</span>
 							</div>
-							<div className="pt-6 text-center bg-white dark:bg-gray-800 rounded w-full">
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
 								<CardChart data={totalRevenue} />
 							</div>
 						</div>
@@ -118,7 +94,7 @@ const Dashboard = () => {
 									+ 5.00%
 								</span>
 							</div>
-							<div className="pt-6 text-center bg-white dark:bg-gray-800 rounded w-full">
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
 								<CardChart data={netProfit} />
 							</div>
 						</div>
@@ -134,7 +110,7 @@ const Dashboard = () => {
 									+ 5.00%
 								</span>
 							</div>
-							<div className="pt-6 text-center bg-white dark:bg-gray-800 rounded w-full">
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
 								<CardChart data={profitMargin} />
 							</div>
 						</div>
@@ -148,7 +124,7 @@ const Dashboard = () => {
 									+ 5.00%
 								</span>
 							</div>
-							<div className="pt-6 text-center bg-white dark:bg-gray-800 rounded w-full">
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
 								<CardChart data={salesVolume} />
 							</div>
 						</div>

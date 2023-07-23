@@ -15,14 +15,18 @@ const Navbar = ({ toggleSidebar }) => {
 							aria-controls="sidebar"
 							className="hidden p-2 mr-3 text-gray-600 rounded cursor-pointer lg:inline hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700">
 							<svg
-								className="w-6 h-6"
-								fill="currentColor"
-								viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg">
+								fill="none"
+								stroke="currentColor"
+								strokeWidth={1.5}
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								className="h-6 w-6">
 								<path
-									fillRule="evenodd"
-									d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h6a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-									clipRule="evenodd"></path>
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M3.75 6.75h16.5M3.75 12H12m-8.25 5.25h16.5"
+								/>
 							</svg>
 						</button>
 						<button
@@ -70,14 +74,17 @@ const Navbar = ({ toggleSidebar }) => {
 							<div className="relative mt-1 lg:w-96">
 								<div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
 									<svg
-										className="w-5 h-5 text-gray-500 dark:text-gray-400"
-										fill="currentColor"
-										viewBox="0 0 20 20"
-										xmlns="http://www.w3.org/2000/svg">
+										fill="none"
+										stroke="currentColor"
+										strokeWidth={1.5}
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+										className="w-5 h-5 text-gray-500 dark:text-gray-400">
 										<path
-											fillRule="evenodd"
-											d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-											clipRule="evenodd"></path>
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+										/>
 									</svg>
 								</div>
 								<input
@@ -117,12 +124,18 @@ const Navbar = ({ toggleSidebar }) => {
 							<span className="sr-only">View notifications</span>
 
 							<svg
+								fill="none"
+								stroke="currentColor"
+								strokeWidth={1.5}
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
 								aria-hidden="true"
-								className="w-6 h-6"
-								fill="currentColor"
-								viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg">
-								<path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path>
+								className="w-6 h-6">
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
+								/>
 							</svg>
 						</button>
 
@@ -340,11 +353,18 @@ const Navbar = ({ toggleSidebar }) => {
 							className="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
 							<span className="sr-only">View notifications</span>
 							<svg
-								className="w-6 h-6"
-								fill="currentColor"
-								viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg">
-								<path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+								fill="none"
+								stroke="currentColor"
+								strokeWidth={1.5}
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true"
+								className='h-6 w-6'>
+								<path
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"
+								/>
 							</svg>
 						</button>
 						<div

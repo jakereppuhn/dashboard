@@ -138,7 +138,7 @@ const Dashboard = () => {
 						<BarChart />
 					</div>
 					<div className="bg-white dark:bg-gray-800 p-6 lg:col-span-3 rounded">
-						Small Box
+						Recent Sales
 					</div>
 				</div>
 			</div>

@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const DatePicker = () => {
-	const [isFocused, setIsFocused] = useState(false);
+	const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
 	const [startDate, setStartDate] = useState(null);
 	const [endDate, setEndDate] = useState(null);
 
 	const [startDateMonth, setStartDateMonth] = useState(new Date());
 	const [endDateMonth, setEndDateMonth] = useState(new Date());
+
+	const datePickerRef = useRef(null);
 
 	const getFirstDayOfMonth = (month) =>
 		new Date(month.getFullYear(), month.getMonth(), 1);
@@ -92,6 +94,22 @@ const DatePicker = () => {
 		nextMonthDays.push(date);
 	}
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (
+				datePickerRef.current &&
+				!datePickerRef.current.contains(event.target)
+			) {
+				setIsDatePickerOpen(false);
+			}
+		};
+
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, []);
+
 	return (
 		<div className="relative lg:w-96">
 			<div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -110,15 +128,17 @@ const DatePicker = () => {
 				type="text"
 				className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
 				placeholder="mm/dd/yyyy - mm/dd/yyyy"
-				onFocus={() => setIsFocused(true)}
-				// onBlur={() => setIsFocused(false)}
+				onFocus={() => setIsDatePickerOpen(true)}
+				onClick={() => setIsDatePickerOpen(!false)}
 				autoComplete="off"
 			/>
-			{isFocused && (
-				<div className="absolute right-0 mt-4 w-max rounded-md shadow-lg overflow-hidden z-50">
-					<div className="flex items-center justify-center w-full bg-gray-50">
-						<div className="flex bg-white shadow-lg rounded-xl">
-							<div className="py-6 border-r border-gray-100">
+			{isDatePickerOpen && (
+				<div className="absolute right-0 mt-4 w-max rounded-md shadow-lg overflow-hidden z-50 drop-shadow-md">
+					<div className="flex items-center justify-center w-full bg-gray-50 dark:bg-gray-800 dark:text-white">
+						<div
+							className="flex bg-white dark:bg-gray-800 shadow-lg rounded-xl"
+							ref={datePickerRef}>
+							<div className="py-6 border-r-2 border-gray-100 dark:border-gray-900">
 								<ul className="flex flex-col text-xs">
 									<li>
 										<button className="px-6 py-1.5 w-full leading-5 hover:bg-gray-50 hover:text-blue-600 text-left">
@@ -169,13 +189,13 @@ const DatePicker = () => {
 							</div>
 							<div className="flex flex-col">
 								<div className="flex divide-x">
-									<div className="flex flex-col px-6 pt-5 pb-6 border-b border-gray-100">
+									<div className="flex flex-col px-6 pt-5 pb-6 border-b-2 border-gray-100 dark:border-gray-900">
 										<div className="flex items-center justify-between">
 											<button
 												onClick={handlePrevStartMonth}
-												className="flex items-center justify-center p-2 rounded-xl hover:bg-gray-50">
+												className="flex items-center justify-center p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600">
 												<svg
-													className="w-6 h-6 text-gray-900 stroke-current"
+													className="w-6 h-6 text-gray-900 stroke-current dark:text-gray-400"
 													fill="none">
 													<path
 														d="M13.25 8.75L9.75 12l3.5 3.25"
@@ -193,9 +213,9 @@ const DatePicker = () => {
 											</div>
 											<button
 												onClick={handleNextStartMonth}
-												className="flex items-center justify-center p-2 rounded-xl hover:bg-gray-50">
+												className="flex items-center justify-center p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-600">
 												<svg
-													className="w-6 h-6 text-gray-900 stroke-current"
+													className="w-6 h-6 text-gray-900 dark:text-gray-400 stroke-current"
 													fill="none">
 													<path
 														d="M10.75 8.75l3.5 3.25-3.5 3.25"
@@ -206,7 +226,7 @@ const DatePicker = () => {
 												</svg>
 											</button>
 										</div>
-										<div className="grid grid-cols-7 text-xs text-center text-gray-900">
+										<div className="grid grid-cols-7 text-xs text-center text-gray-900 dark:text-primary-500">
 											<span className="flex items-center justify-center w-10 h-10 font-semibold rounded-lg">
 												Su
 											</span>
@@ -231,9 +251,7 @@ const DatePicker = () => {
 											{previousMonthDays.map((date) => (
 												<span
 													key={date.toISOString()}
-													className="flex items-center justify-center w-10 h-10 font-semibold rounded-lg">
-													
-												</span>
+													className="flex items-center justify-center w-10 h-10 font-semibold rounded-lg"></span>
 											))}
 											{startMonthDays.map((day, index) => (
 												<span
@@ -245,9 +263,7 @@ const DatePicker = () => {
 											{nextMonthDays.map((date) => (
 												<span
 													key={date.toISOString()}
-													className="flex items-center justify-center w-10 h-10 font-semibold rounded-lg">
-													
-												</span>
+													className="flex items-center justify-center w-10 h-10 font-semibold rounded-lg"></span>
 											))}
 										</div>
 									</div>
@@ -326,12 +342,12 @@ const DatePicker = () => {
 											type="text"
 											value={startDate}
 											onChange={(e) => handleStartDateSelect(e.target.value)}
-											className="flex items-center w-32 px-4 py-2 text-sm text-gray-900 rounded-lg bg-gray-50 focus:bg-white focus:ring-1 focus:ring-blue-600 focus:outline-none"
+											className="flex w-32 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
 											placeholder="18 / 02 / 2021"
 										/>
 										<div className="p-1">
 											<svg
-												className="w-6 h-6 text-gray-900 stroke-current"
+												className="w-6 h-6 text-gray-900 dark:text-gray-400 stroke-current"
 												fill="none">
 												<path
 													d="M6.738 12.012h10.5m-4.476 4.25l4.5-4.25-4.5-4.25"
@@ -345,16 +361,21 @@ const DatePicker = () => {
 											type="text"
 											value={endDate}
 											onChange={(e) => handleEndDateSelect(e.target.value)}
-											className="flex items-center w-32 px-4 py-2 text-sm text-gray-900 rounded-lg bg-gray-50 focus:bg-white focus:ring-1 focus:ring-blue-600 focus:outline-none"
+											className="flex w-32 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
 											placeholder="11 / 03 / 2021"
 										/>
 									</div>
 									<div className="flex items-center space-x-2">
-										<button className="px-4 py-2 text-sm rounded-lg bg-gray-50 focus:outline-none focus:ring-1 focus:ring-blue-600 hover:bg-gray-100">
+										<button
+											onClick={() => setIsDatePickerOpen(false)}
+											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
+											type="button">
 											Cancel
 										</button>
-										<button className="px-4 py-2 text-sm text-white bg-blue-600 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-600 hover:bg-blue-700">
-											Set Date
+										<button
+											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-primary-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
+											type="button">
+											Confirm
 										</button>
 									</div>
 								</div>

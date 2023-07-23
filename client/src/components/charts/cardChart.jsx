@@ -9,20 +9,11 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
-const cardChart = () => {
-	const data = {
-		labels: [1, 2, 1, 3, 5, 4, 7],
-		datasets: [
-			{
-				label: 'Sales',
-				data: [1, 2, 1, 3, 5, 4, 7],
-				backgroundColor: '#3b82f6',
-				borderColor: '#3b82f6',
-				borderWidth: 3,
-				tension: 0.4,
-			},
-		],
-	};
+const cardChart = ({ data }) => {
+	const datasetValues = data.datasets.flatMap((dataset) => dataset.data);
+
+	const maxValue = Math.max(...datasetValues);
+	const minValue = Math.min(...datasetValues);
 
 	const options = {
 		maintainAspectRatio: false,
@@ -43,8 +34,8 @@ const cardChart = () => {
 			},
 			y: {
 				display: false,
-				min: 0,
-				max: 10,
+				min: minValue,
+				max: maxValue,
 			},
 		},
 	};

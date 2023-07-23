@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
 				<main
 					className={`overflow-y-auto flex-auto ${
 						showSidebar ? 'ml-64 md:ml-0' : ''
-					} p-4 bg-gray-50 dark:bg-gray-900`}>
+					}  bg-gray-50 dark:bg-gray-900`}>
 					{children}
 				</main>
 			</div>

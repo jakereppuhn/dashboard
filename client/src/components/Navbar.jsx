@@ -60,7 +60,7 @@ const Navbar = ({ toggleSidebar }) => {
 								alt="FlowBite Logo"
 							/>
 							<span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
-								{user.firstName}
+								Dashboard
 							</span>
 						</Link>
 						<form action="#" method="GET" className="hidden lg:block lg:pl-2">

@@ -7,8 +7,8 @@ const DatePicker = () => {
 
 	const [monthDays, setMonthDays] = useState([]);
 
-	const [startDate, setStartDate] = useState(null);
-	const [endDate, setEndDate] = useState(null);
+	const [startDate, setStartDate] = useState('');
+	const [endDate, setEndDate] = useState('');
 
 	const datePickerRef = useRef(null);
 
@@ -36,16 +36,11 @@ const DatePicker = () => {
 		return daysArray;
 	};
 
-	const handleDateClick = (date) => {
-		const selectedDate = new Date(selectedYear, selectedMonth - 1, date);
-		if (!startDate) {
-			setStartDate(selectedDate);
-		} else if (!endDate && selectedDate >= startDate) {
-			setEndDate(selectedDate);
-		} else {
-			setStartDate(selectedDate);
-			setEndDate(null);
-		}
+	const handleDateClick = (day) => {
+		// Get the full date for the clicked day in the current selected month and year.
+		const clickedDate = new Date(selectedYear, selectedMonth - 1, day);
+
+		console.log(clickedDate); // This will now print a proper date object.
 	};
 
 	const isDateSelected = (date) => {
@@ -154,7 +149,7 @@ const DatePicker = () => {
 							<div className="py-6">
 								<ul className="flex flex-col text-xs">
 									<li>
-										<button className="px-6 py-1.5 w-full leading-5 hover:bg-gray-50 hover:text-blue-600 text-left">
+										<button className="px-6 py-1.5 w-full leading-5 hover:bg-gray-50 hover:text-blue-600 rounded-r text-left">
 											Last 7 days
 										</button>
 									</li>
@@ -193,11 +188,6 @@ const DatePicker = () => {
 											All time
 										</button>
 									</li>
-									<li>
-										<button className="px-6 py-1.5 w-full leading-5 hover:bg-gray-50 hover:text-blue-600 text-left">
-											Custom
-										</button>
-									</li>
 								</ul>
 							</div>
 							<div className="flex flex-col">
@@ -207,7 +197,7 @@ const DatePicker = () => {
 											<input
 												type="text"
 												value={startDate}
-												onChange={(e) => handleDateClick(e.target.value)}
+												onChange={(e) => setStartDate(e.target.value)}
 												className="flex w-32 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
 												placeholder="18 / 02 / 2021"
 											/>
@@ -226,7 +216,7 @@ const DatePicker = () => {
 											<input
 												type="text"
 												value={endDate}
-												onChange={(e) => handleDateClick(e.target.value)}
+												onChange={(e) => setStartDate(e.target.value)}
 												className="flex w-32 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
 												placeholder="11 / 03 / 2021"
 											/>
@@ -293,7 +283,9 @@ const DatePicker = () => {
 												Sa
 											</span>
 											{monthDays.map((date) => (
-												<button key={date.toISOString()}>
+												<button
+													key={date.toISOString()}
+													onClick={() => handleDateClick(date.getDate())}>
 													<span
 														className={`flex items-center justify-center w-10 h-10 font-semibold rounded-xl ${
 															date.getMonth() === selectedMonth - 1

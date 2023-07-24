@@ -63,7 +63,7 @@ const Dashboard = () => {
 	return (
 		<Layout>
 			<div className="px-8 py-4">
-				<div className="w-full flex justify-between mb-4">
+				<div className="w-full flex justify-between">
 					<h1 className="text-2xl font-bold dark:text-white flex items-center">
 						Dashboard
 					</h1>

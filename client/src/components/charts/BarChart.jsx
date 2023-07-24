@@ -2,13 +2,35 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, BarElement } from 'chart.js';
 
 ChartJS.register(BarElement);
-const BarChart = () => {
+const BarChart = ({ dateRange }) => {
+	dateRange = dateRange || {
+		startDate: new Date(new Date().getFullYear(), new Date().getMonth() - 6, 1),
+		endDate: new Date(),
+	};
+
+	const generateDates = (startDate, endDate) => {
+		let start = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+		let end = new Date(endDate.getFullYear(), endDate.getMonth() + 1, 0);
+		let dates = [];
+
+		while (start <= end) {
+			dates.push(start.toLocaleDateString());
+			start = new Date(start.getFullYear(), start.getMonth() + 1, 1);
+		}
+
+		return dates;
+	};
+
+	const { startDate, endDate } = dateRange;
+
+	const dates = generateDates(startDate, endDate);
+
 	const data = {
-		labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jun'],
+		labels: dates,
 		datasets: [
 			{
 				label: 'My First Dataset',
-				data: [65, 59, 80, 81, 56, 55, 40],
+				data: new Array(dates.length).fill(0),
 				backgroundColor: [
 					'rgba(255, 99, 132, 0.2)',
 					'rgba(255, 159, 64, 0.2)',
@@ -36,7 +58,7 @@ const BarChart = () => {
 		responsive: true,
 		maintainAspectRatio: false,
 		legend: {
-			display: false,
+			display: true,
 		},
 		scales: {
 			x: {

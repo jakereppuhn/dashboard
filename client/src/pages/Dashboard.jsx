@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Layout } from '../components';
 import BarChart from '../components/charts/barChart';
 import CardChart from '../components/charts/CardChart';
 import DatePicker from '../components/DatePicker';
 
 const Dashboard = () => {
+	const [dateRange, setDateRange] = useState(null);
+
 	const totalRevenue = {
 		labels: [1, 2, 3, 4, 5, 6, 7],
 		datasets: [
@@ -67,7 +70,7 @@ const Dashboard = () => {
 					<h1 className="text-2xl font-bold dark:text-white flex items-center">
 						Dashboard
 					</h1>
-					<DatePicker />
+					<DatePicker dateRange={dateRange} setDateRange={setDateRange} />
 				</div>
 
 				<div className="flex flex-wrap -ml-2 -mr-2">
@@ -135,7 +138,7 @@ const Dashboard = () => {
 
 				<div className="grid grid-cols-1 lg:grid-cols-8 gap-4 text-white mt-4">
 					<div className="bg-white dark:bg-gray-800 p-6 lg:col-span-5 rounded">
-						<BarChart />
+						<BarChart dateRange={dateRange} />
 					</div>
 					<div className="bg-white dark:bg-gray-800 p-6 lg:col-span-3 rounded">
 						Recent Sales

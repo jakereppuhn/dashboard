@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const DatePicker = () => {
+const DatePicker = ({ dateRange, setDateRange }) => {
 	const [datePickerOpen, setDatePickerOpen] = useState(false);
 	const [rangeFilter, setRangeFilter] = useState(null);
 
@@ -9,8 +9,8 @@ const DatePicker = () => {
 
 	const [monthDays, setMonthDays] = useState([]);
 
-	const [startDate, setStartDate] = useState('');
-	const [endDate, setEndDate] = useState('');
+	const [startDate, setStartDate] = useState(null);
+	const [endDate, setEndDate] = useState(null);
 
 	const datePickerRef = useRef(null);
 
@@ -77,16 +77,50 @@ const DatePicker = () => {
 		return daysArray;
 	};
 
-	//fix
-	// prev and next month dates still have a value of current month
-	const handleDateClick = (day) => {
-		const clickedDate = new Date(selectedYear, selectedMonth - 1, day);
-
-		console.log(clickedDate);
+	const handleSetDateRange = () => {
+		if (startDate && endDate) {
+			setDateRange({ startDate, endDate });
+		} else if (startDate && !endDate) {
+			setDateRange({ startDate, endDate: new Date() });
+		} else {
+			setDateRange(null);
+		}
 	};
 
+	const handleDateClick = (date) => {
+		const clickedDate = new Date(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate()
+		);
+
+		if (!startDate) {
+			setStartDate(clickedDate);
+		} else if (startDate && !endDate) {
+			if (clickedDate >= startDate) {
+				setEndDate(clickedDate);
+			} else {
+				console.log('End date must be after start date');
+				setStartDate(null);
+				return;
+			}
+		} else if (startDate && endDate) {
+			setStartDate(null);
+			setEndDate(null);
+			setStartDate(clickedDate);
+		}
+	};
+
+	useEffect(() => {
+		console.log(startDate, endDate);
+	}, [startDate, endDate]);
+
 	const isDateSelected = (date) => {
-		const selectedDate = new Date(selectedYear, selectedMonth - 1, date);
+		const selectedDate = new Date(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate()
+		);
 		return (
 			startDate &&
 			endDate &&
@@ -96,7 +130,11 @@ const DatePicker = () => {
 	};
 
 	const isDateInRange = (date) => {
-		const selectedDate = new Date(selectedYear, selectedMonth - 1, date);
+		const selectedDate = new Date(
+			date.getFullYear(),
+			date.getMonth(),
+			date.getDate()
+		);
 		return (
 			startDate && endDate && selectedDate > startDate && selectedDate < endDate
 		);
@@ -126,7 +164,7 @@ const DatePicker = () => {
 		const lastDayOfWeek = daysArray[daysArray.length - 1].getDay();
 
 		if (firstDayOfWeek > 0) {
-			for (let i = 1; i <= firstDayOfWeek; i++) {
+			for (let i = 0; i < firstDayOfWeek; i++) {
 				daysArray.unshift(new Date(selectedYear, selectedMonth - 1, -i));
 			}
 		}
@@ -167,7 +205,7 @@ const DatePicker = () => {
 			<div className="flex items-center pb-4">
 				<input
 					type="text"
-					value={startDate}
+					value={startDate || ''}
 					onFocus={() => setDatePickerOpen(true)}
 					onClick={() => setDatePickerOpen(!false)}
 					onChange={(e) => setStartDate(e.target.value)}
@@ -188,7 +226,7 @@ const DatePicker = () => {
 				</div>
 				<input
 					type="text"
-					value={endDate}
+					value={endDate || ''}
 					onFocus={() => setDatePickerOpen(true)}
 					onClick={() => setDatePickerOpen(!false)}
 					onChange={(e) => setStartDate(e.target.value)}
@@ -197,7 +235,7 @@ const DatePicker = () => {
 				/>
 			</div>
 			{datePickerOpen && (
-				<div className="absolute right-0 mt-4 w-max rounded-md shadow-lg overflow-hidden z-50 drop-shadow-md">
+				<div className="absolute right-0 w-max rounded-md shadow-lg overflow-hidden z-50 drop-shadow-md">
 					<div className="flex items-center justify-center w-full bg-gray-50 dark:bg-gray-800 dark:text-white">
 						<div
 							className="flex bg-white dark:bg-gray-800 shadow-lg rounded-xl"
@@ -233,15 +271,21 @@ const DatePicker = () => {
 													/>
 												</svg>
 											</button>
-											<div className="text-sm font-semibold">
-												{new Date(
-													selectedYear,
-													selectedMonth - 1
-												).toLocaleString('default', {
-													month: 'long',
-													year: 'numeric',
-												})}
-											</div>
+											<button
+												onClick={() => {
+													setSelectedYear(new Date().getFullYear());
+													setSelectedMonth(new Date().getMonth() + 1);
+												}}>
+												<div className="text-sm font-semibold">
+													{new Date(
+														selectedYear,
+														selectedMonth - 1
+													).toLocaleString('default', {
+														month: 'long',
+														year: 'numeric',
+													})}
+												</div>
+											</button>
 											<button
 												onClick={handleNextMonth}
 												className="flex items-center justify-center p-2 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-900">
@@ -282,12 +326,17 @@ const DatePicker = () => {
 											{monthDays.map((date) => (
 												<button
 													key={date.toISOString()}
-													onClick={() => handleDateClick(date.getDate())}>
+													onClick={() => handleDateClick(date)}>
 													<span
 														className={`flex items-center justify-center w-10 h-10 font-semibold rounded-xl ${
 															date.getMonth() === selectedMonth - 1
 																? 'text-white hover:bg-gray-900'
 																: 'text-gray-600 hover:bg-gray-900'
+														} ${
+															isDateSelected(date) &&
+															'bg-blue-500 bg-opacity-50 text-white'
+														} 
+														${isDateInRange(date) && 'bg-blue-300'}
 														}`}>
 														{date.getDate()}
 													</span>
@@ -299,12 +348,19 @@ const DatePicker = () => {
 								<div className="flex items-center justify-end px-6 py-4">
 									<div className="flex items-center space-x-4">
 										<button
-											onClick={() => setDatePickerOpen(false)}
+											onClick={() => {
+												setStartDate(null);
+												setEndDate(null);
+											}}
 											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
 											type="button">
-											Cancel
+											Clear
 										</button>
 										<button
+											onClick={() => {
+												handleSetDateRange();
+												setDatePickerOpen(false);
+											}}
 											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-primary-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
 											type="button">
 											Confirm

@@ -343,7 +343,7 @@ const DatePicker = ({ setDateRange }) => {
 															isDateSelected(date) &&
 															'bg-blue-500 bg-opacity-30 text-white'
 														} 
-														${isDateInRange(date) && 'bg-blue-300'}
+														${isDateInRange(date) && 'bg-blue-100'}
 														}`}>
 														{date.getDate()}
 													</span>

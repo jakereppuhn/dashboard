@@ -341,7 +341,7 @@ const DatePicker = ({ setDateRange }) => {
 																: 'text-gray-600 hover:bg-gray-900'
 														} ${
 															isDateSelected(date) &&
-															'bg-blue-500 bg-opacity-50 text-white'
+															'bg-blue-500 bg-opacity-30 text-white'
 														} 
 														${isDateInRange(date) && 'bg-blue-300'}
 														}`}>
@@ -356,21 +356,20 @@ const DatePicker = ({ setDateRange }) => {
 									<div className="flex items-center space-x-4">
 										<button
 											onClick={() => {
-												setStartDate(null);
-												setEndDate(null);
+												setDatePickerOpen(false);
 											}}
 											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
 											type="button">
-											Clear
+											Cancel
 										</button>
 										<button
 											onClick={() => {
 												handleSetDateRange();
 												setDatePickerOpen(false);
 											}}
-											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-primary-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
+											className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
 											type="button">
-											Confirm
+											Apply
 										</button>
 									</div>
 								</div>

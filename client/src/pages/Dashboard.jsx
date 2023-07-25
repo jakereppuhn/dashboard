@@ -63,6 +63,37 @@ const Dashboard = () => {
 		],
 	};
 
+	const cardData = [
+		{
+			title: 'Total Revenue',
+			value: '$ 27,342.43',
+			percentage: '+ 5.00%',
+			data: totalRevenue,
+			color: 'bg-green-500',
+		},
+		{
+			title: 'Net Profit',
+			value: '$ 19,749.32',
+			percentage: '+ 5.00%',
+			data: netProfit,
+			color: 'bg-green-500',
+		},
+		{
+			title: 'Profit Margin',
+			value: '87.25%',
+			percentage: '+ 5.00%',
+			data: profitMargin,
+			color: 'bg-green-500',
+		},
+		{
+			title: 'Sales Volume',
+			value: '2,483',
+			percentage: '+ 5.00%',
+			data: salesVolume,
+			color: 'bg-green-500',
+		},
+	];
+
 	return (
 		<Layout>
 			<div className="px-8 py-4">
@@ -74,66 +105,26 @@ const Dashboard = () => {
 				</div>
 
 				<div className="flex flex-wrap -ml-2 -mr-2">
-					<div className="w-full md:w-1/2 lg:w-1/4 px-2 relative flex items-center justify-center">
-						<div className="text-center absolute z-10">
-							<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
-								Total Revenue
-							</h4>
-							<p className="mb-1 text-4xl font-bold dark:text-white">
-								$ 27,342.43
-							</p>
-							<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">
-								+ 5.00%
-							</span>
+					{cardData.map((card, index) => (
+						<div
+							key={index}
+							className="w-full md:w-1/2 lg:w-1/4 px-2 relative flex items-center justify-center">
+							<div className="text-center absolute z-10">
+								<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
+									{card.title}
+								</h4>
+								<p className="mb-1 text-4xl font-bold dark:text-white">
+									{card.value}
+								</p>
+								<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">
+									+ 5.00%
+								</span>
+							</div>
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded-lg w-full overflow-hidden">
+								<CardChart data={card.data} text={'Total Revenue'} />
+							</div>
 						</div>
-						<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
-							<CardChart data={totalRevenue} text={'Total Revenue'} />
-						</div>
-					</div>
-					<div className="w-full md:w-1/2 lg:w-1/4 px-2 pt-4 md:pt-0 relative flex items-center justify-center">
-						<div className="text-center absolute z-10">
-							<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
-								Net Profit
-							</h4>
-							<p className="mb-1 text-4xl font-bold dark:text-white">
-								$ 19,749.32
-							</p>
-							<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">
-								+ 5.00%
-							</span>
-						</div>
-						<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
-							<CardChart data={netProfit} />
-						</div>
-					</div>
-					<div className="w-full md:w-1/2 lg:w-1/4 px-2 pt-4 lg:pt-0 relative flex items-center justify-center">
-						<div className="text-center absolute z-10">
-							<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
-								Profit Margin
-							</h4>
-							<p className="mb-1 text-4xl font-bold dark:text-white">87.25%</p>
-							<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">
-								+ 5.00%
-							</span>
-						</div>
-						<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
-							<CardChart data={profitMargin} />
-						</div>
-					</div>
-					<div className="w-full md:w-1/2 lg:w-1/4 px-2 pt-4 lg:pt-0 relative flex items-center justify-center">
-						<div className="text-center absolute z-10">
-							<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
-								Sales Volume
-							</h4>
-							<p className="mb-1 text-4xl font-bold dark:text-white">2,483</p>
-							<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">
-								+ 5.00%
-							</span>
-						</div>
-						<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
-							<CardChart data={salesVolume} />
-						</div>
-					</div>
+					))}
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-8 gap-4 text-white mt-4">

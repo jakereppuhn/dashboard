@@ -9,13 +9,8 @@ const DatePicker = ({ setDateRange }) => {
 
 	const [monthDays, setMonthDays] = useState([]);
 
-	const [startDate, setStartDate] = useState(
-		new Date(localStorage.getItem('startDate')) ||
-			new Date(new Date().getFullYear(), new Date().getMonth(), 1)
-	);
-	const [endDate, setEndDate] = useState(
-		new Date(localStorage.getItem('endDate')) || new Date()
-	);
+	const [startDate, setStartDate] = useState(null);
+	const [endDate, setEndDate] = useState(null);
 
 	const datePickerRef = useRef(null);
 
@@ -115,10 +110,6 @@ const DatePicker = ({ setDateRange }) => {
 		}
 	};
 
-	useEffect(() => {
-		console.log(startDate, endDate);
-	}, [startDate, endDate]);
-
 	const isDateSelected = (date) => {
 		const selectedDate = new Date(
 			date.getFullYear(),
@@ -163,6 +154,10 @@ const DatePicker = ({ setDateRange }) => {
 	};
 
 	useEffect(() => {
+		console.log(startDate, endDate);
+	}, [startDate, endDate]);
+
+	useEffect(() => {
 		const daysArray = getDaysArrayForMonth(selectedYear, selectedMonth - 1);
 		const firstDayOfWeek = daysArray[0].getDay();
 		const lastDayOfWeek = daysArray[daysArray.length - 1].getDay();
@@ -203,11 +198,6 @@ const DatePicker = ({ setDateRange }) => {
 			console.log(rangeFilter);
 		}
 	}, [rangeFilter]);
-
-	useEffect(() => {
-		localStorage.setItem('startDate', startDate);
-		localStorage.setItem('endDate', endDate);
-	}, [startDate, endDate]);
 
 	return (
 		<div className="relative w-max pl-3">

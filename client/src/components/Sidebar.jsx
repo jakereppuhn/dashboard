@@ -63,7 +63,7 @@ const Sidebar = () => {
 								<span className="ml-3">Inventory</span>
 							</Link>
 						</li>
-						<li>
+						{/* <li>
 							<button
 								type="button"
 								className="flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
@@ -251,9 +251,9 @@ const Sidebar = () => {
 									</a>
 								</li>
 							</ul>
-						</li>
+						</li> */}
 					</ul>
-					<ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
+					{/* <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
 						<li>
 							<a
 								href="#"
@@ -306,7 +306,7 @@ const Sidebar = () => {
 								<span className="ml-3">Help</span>
 							</a>
 						</li>
-					</ul>
+					</ul> */}
 				</div>
 				<div className="hidden absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex bg-white dark:bg-gray-800 z-20 border-r border-gray-200 dark:border-gray-700">
 					<a

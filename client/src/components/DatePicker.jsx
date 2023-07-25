@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const DatePicker = ({ dateRange, setDateRange }) => {
+const DatePicker = ({ setDateRange }) => {
 	const [datePickerOpen, setDatePickerOpen] = useState(false);
 	const [rangeFilter, setRangeFilter] = useState(null);
 
@@ -9,8 +9,13 @@ const DatePicker = ({ dateRange, setDateRange }) => {
 
 	const [monthDays, setMonthDays] = useState([]);
 
-	const [startDate, setStartDate] = useState(null);
-	const [endDate, setEndDate] = useState(null);
+	const [startDate, setStartDate] = useState(
+		new Date(localStorage.getItem('startDate')) ||
+			new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+	);
+	const [endDate, setEndDate] = useState(
+		new Date(localStorage.getItem('endDate')) || new Date()
+	);
 
 	const datePickerRef = useRef(null);
 
@@ -107,7 +112,6 @@ const DatePicker = ({ dateRange, setDateRange }) => {
 		} else if (startDate && endDate) {
 			setStartDate(null);
 			setEndDate(null);
-			setStartDate(clickedDate);
 		}
 	};
 
@@ -200,17 +204,27 @@ const DatePicker = ({ dateRange, setDateRange }) => {
 		}
 	}, [rangeFilter]);
 
+	useEffect(() => {
+		localStorage.setItem('startDate', startDate);
+		localStorage.setItem('endDate', endDate);
+	}, [startDate, endDate]);
+
 	return (
 		<div className="relative w-max pl-3">
 			<div className="flex items-center pb-4">
 				<input
 					type="text"
-					value={startDate || ''}
+					value={
+						startDate
+							? startDate.toLocaleString().split(',')[0]
+							: new Date(new Date().getFullYear(), new Date().getMonth(), 1)
+									.toLocaleString()
+									.split(',')[0]
+					}
 					onFocus={() => setDatePickerOpen(true)}
 					onClick={() => setDatePickerOpen(!false)}
 					onChange={(e) => setStartDate(e.target.value)}
-					className="flex w-32 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-					placeholder="18 / 02 / 2021"
+					className="flex w-32 items-center text-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
 				/>
 				<div className="p-1">
 					<svg
@@ -226,12 +240,15 @@ const DatePicker = ({ dateRange, setDateRange }) => {
 				</div>
 				<input
 					type="text"
-					value={endDate || ''}
+					value={
+						endDate
+							? endDate.toLocaleString().split(',')[0]
+							: new Date().toLocaleString().split(',')[0]
+					}
 					onFocus={() => setDatePickerOpen(true)}
 					onClick={() => setDatePickerOpen(!false)}
 					onChange={(e) => setStartDate(e.target.value)}
-					className="flex w-32 items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
-					placeholder="11 / 03 / 2021"
+					className="flex w-32 items-center justify-center text-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700"
 				/>
 			</div>
 			{datePickerOpen && (
@@ -328,7 +345,7 @@ const DatePicker = ({ dateRange, setDateRange }) => {
 													key={date.toISOString()}
 													onClick={() => handleDateClick(date)}>
 													<span
-														className={`flex items-center justify-center w-10 h-10 font-semibold rounded-xl ${
+														className={`flex items-center justify-center w-10 h-10 font-semibold ${
 															date.getMonth() === selectedMonth - 1
 																? 'text-white hover:bg-gray-900'
 																: 'text-gray-600 hover:bg-gray-900'

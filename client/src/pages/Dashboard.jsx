@@ -87,7 +87,7 @@ const Dashboard = () => {
 							</span>
 						</div>
 						<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded w-full">
-							<CardChart data={totalRevenue} />
+							<CardChart data={totalRevenue} text={'Total Revenue'} />
 						</div>
 					</div>
 					<div className="w-full md:w-1/2 lg:w-1/4 px-2 pt-4 md:pt-0 relative flex items-center justify-center">

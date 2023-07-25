@@ -40,11 +40,7 @@ const cardChart = ({ data }) => {
 		},
 	};
 
-	return (
-		<div>
-			<Line data={data} options={options}></Line>
-		</div>
-	);
+	return <Line data={data} options={options}></Line>;
 };
 
 export default cardChart;

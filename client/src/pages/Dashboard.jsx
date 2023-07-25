@@ -110,17 +110,17 @@ const Dashboard = () => {
 							key={index}
 							className="w-full md:w-1/2 lg:w-1/4 px-2 relative flex items-center justify-center">
 							<div className="text-center absolute z-10">
-								<h4 className="mb-2 text-md text-gray-500 dark:text-primary-500">
+								<h4 className="mb-1 text-md text-gray-500 dark:text-gray-400">
 									{card.title}
 								</h4>
-								<p className="mb-1 text-4xl font-bold dark:text-white">
+								<p className="mb-1 text-2xl font-bold dark:text-white">
 									{card.value}
 								</p>
 								<span className="inline-block py-1 px-2 mb-2 text-xs text-white bg-green-500 rounded">
 									+ 5.00%
 								</span>
 							</div>
-							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded-lg w-full overflow-hidden">
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded-lg w-full overflow-hidden h-32">
 								<CardChart data={card.data} text={'Total Revenue'} />
 							</div>
 						</div>

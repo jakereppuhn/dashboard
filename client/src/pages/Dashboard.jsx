@@ -11,11 +11,9 @@ const Dashboard = () => {
 		labels: [1, 2, 3, 4, 5, 6, 7],
 		datasets: [
 			{
-				data: [15000, 16500, 18000, 17000, 17500, 18500, 20000],
-				backgroundColor: '#ffffff',
+				data: [19000, 16500, 18000, 17000, 17500, 18500, 20000],
+				fill: true,
 				borderColor: 'rgba(102, 126, 234, 1)',
-				pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-				borderWidth: 3,
 				tension: 0.4,
 			},
 		],
@@ -26,10 +24,8 @@ const Dashboard = () => {
 		datasets: [
 			{
 				data: [5000, 5500, 6000, 5600, 5800, 6100, 7000],
-				backgroundColor: 'rgba(102, 126, 234, 0.25)',
+				fill: true,
 				borderColor: 'rgba(102, 126, 234, 1)',
-				pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-				borderWidth: 3,
 				tension: 0.4,
 			},
 		],
@@ -40,10 +36,8 @@ const Dashboard = () => {
 		datasets: [
 			{
 				data: [33.3, 33.3, 33.3, 32.9, 33.1, 33, 35],
-				backgroundColor: 'rgba(102, 126, 234, 0.25)',
+				fill: true,
 				borderColor: 'rgba(102, 126, 234, 1)',
-				pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-				borderWidth: 3,
 				tension: 0.4,
 			},
 		],
@@ -54,10 +48,8 @@ const Dashboard = () => {
 		datasets: [
 			{
 				data: [300, 330, 360, 340, 350, 370, 400],
-				backgroundColor: 'rgba(102, 126, 234, 0.25)',
+				fill: true,
 				borderColor: 'rgba(102, 126, 234, 1)',
-				pointBackgroundColor: 'rgba(102, 126, 234, 1)',
-				borderWidth: 3,
 				tension: 0.4,
 			},
 		],

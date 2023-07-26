@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCreateProduct } from '../../hooks/product/useCreateProduct';
+import Checkbox from '../inputs/CheckBox';
 
 const AddProduct = ({ onCloseAdd }) => {
 	const [name, setName] = useState('');
@@ -13,29 +14,6 @@ const AddProduct = ({ onCloseAdd }) => {
 	const [section, setSection] = useState('');
 	const [row, setRow] = useState('');
 	const [seat, setSeat] = useState('');
-
-	const getCurrentDate = () => {
-		const date = new Date();
-		return `${date.getFullYear()}-${(date.getMonth() + 1)
-			.toString()
-			.padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-	};
-
-	const getNearestHalfHour = () => {
-		const date = new Date();
-		const minutes = date.getMinutes();
-		const hours = date.getHours();
-		const nearestHalfHour = Math.round(minutes / 30) * 30;
-		const finalHour = nearestHalfHour === 60 ? hours + 1 : hours;
-		const finalMinutes = nearestHalfHour === 60 ? 0 : nearestHalfHour;
-
-		return `${finalHour.toString().padStart(2, '0')}:${finalMinutes
-			.toString()
-			.padStart(2, '0')}`;
-	};
-
-	const [date, setDate] = useState(getCurrentDate());
-	const [time, setTime] = useState(getNearestHalfHour());
 
 	const { createProduct, error, isLoading } = useCreateProduct();
 
@@ -92,6 +70,35 @@ const AddProduct = ({ onCloseAdd }) => {
 		},
 	];
 
+	const inputClass =
+		'block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer';
+
+	const labelClass =
+		'peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6';
+
+	const getCurrentDate = () => {
+		const date = new Date();
+		return `${date.getFullYear()}-${(date.getMonth() + 1)
+			.toString()
+			.padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+	};
+
+	const getNearestHalfHour = () => {
+		const date = new Date();
+		const minutes = date.getMinutes();
+		const hours = date.getHours();
+		const nearestHalfHour = Math.round(minutes / 30) * 30;
+		const finalHour = nearestHalfHour === 60 ? hours + 1 : hours;
+		const finalMinutes = nearestHalfHour === 60 ? 0 : nearestHalfHour;
+
+		return `${finalHour.toString().padStart(2, '0')}:${finalMinutes
+			.toString()
+			.padStart(2, '0')}`;
+	};
+
+	const [date, setDate] = useState(getCurrentDate());
+	const [time, setTime] = useState(getNearestHalfHour());
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
@@ -127,7 +134,7 @@ const AddProduct = ({ onCloseAdd }) => {
 			productAttributes,
 			initialStock
 		);
-		onClose();
+		onCloseAdd();
 	};
 
 	const handleInputChange = (setterFunc) => (e) => setterFunc(e.target.value);
@@ -135,9 +142,187 @@ const AddProduct = ({ onCloseAdd }) => {
 	const renderFormBasedOnType = (type) => {
 		switch (type) {
 			case 'general':
-				return <div>General</div>;
+				return (
+					<div>
+						<div className="grid md:grid-cols-5 md:gap-6 mt-6">
+							<div className="relative z-0 w-full mb-6 group col-span-3">
+								<input
+									type="text"
+									name="productName"
+									className={inputClass}
+									placeholder=" "
+									autoComplete="off"
+									required
+								/>
+								<label className={labelClass}>Name</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									name="productSku"
+									className={inputClass}
+									placeholder=" "
+									required
+								/>
+								<label className={labelClass}>Sku</label>
+							</div>
+						</div>
+						<div className="relative z-0 w-full mb-6 group">
+							<input
+								type="text"
+								name="productDescription"
+								className={inputClass}
+								placeholder=" "
+								required
+							/>
+							<label className={labelClass}>Description</label>
+						</div>
+						<div className="grid md:grid-cols-5 md:gap-6">
+							<div className="relative z-0 w-full mb-6 group col-span-3">
+								<input
+									type="text"
+									name="productTags"
+									className={inputClass}
+									placeholder=" "
+								/>
+								<label className={labelClass}>Tags</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+									placeholder=" "
+								/>
+								<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+									Category
+								</label>
+							</div>
+						</div>
+						<div className="grid md:grid-cols-2 md:gap-6">
+							<div className="relative z-0 w-full mb-6 group">
+								<input
+									type="text"
+									className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+									placeholder=" "
+								/>
+								<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+									First name
+								</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group">
+								<input
+									type="text"
+									name="floating_last_name"
+									className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+									placeholder=" "
+									required
+								/>
+								<label className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+									Last name
+								</label>
+							</div>
+						</div>
+					</div>
+				);
 			case 'ticket':
-				return <div>Ticket</div>;
+				return (
+					<div>
+						<div className="grid md:grid-cols-2 md:gap-6 mt-6">
+							<div className="relative z-0 w-full mb-6 group">
+								<input
+									type="text"
+									name="ticketArtist"
+									className={inputClass}
+									placeholder=" "
+									autoComplete="off"
+									required
+								/>
+								<label className={labelClass}>Artist Name</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group">
+								<input
+									type="text"
+									name="ticketVenue"
+									className={inputClass}
+									placeholder=" "
+									required
+								/>
+								<label className={labelClass}>Venue</label>
+							</div>
+						</div>
+						<div className="grid md:grid-cols-5 md:gap-6">
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									name="ticketDate"
+									className={inputClass}
+									placeholder=" "
+									autoComplete="off"
+									required
+								/>
+								<label className={labelClass}>Date</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									name="ticketTime"
+									className={inputClass}
+									placeholder=" "
+									required
+								/>
+								<label className={labelClass}>Time</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group">
+								<input
+									type="text"
+									name="ticketQuantity"
+									className={inputClass}
+									placeholder=" "
+									required
+								/>
+								<label className={labelClass}>Quantity</label>
+							</div>
+						</div>
+						<div className="grid md:grid-cols-7 md:gap-6">
+							<div className="relative z-0 w-full mb-6 group">
+								<div className="flex gap-3 items-center h-full justify-center mb-4">
+									<label className=" text-sm text-gray-500 dark:text-gray-400">
+										GA
+									</label>
+									<Checkbox />
+								</div>
+							</div>
+
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									name="ticketSection"
+									className={inputClass}
+									placeholder=" "
+								/>
+								<label className={labelClass}>Section</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									name="ticketRow"
+									className={inputClass}
+									placeholder=" "
+								/>
+								<label className={labelClass}>Row</label>
+							</div>
+							<div className="relative z-0 w-full mb-6 group col-span-2">
+								<input
+									type="text"
+									name="ticketSeat"
+									className={inputClass}
+									placeholder=" "
+								/>
+								<label className={labelClass}>Seat(s)</label>
+							</div>
+						</div>
+					</div>
+				);
 			case 'clothing':
 				return <div>Clothing</div>;
 			case 'sneakers':
@@ -164,15 +349,17 @@ const AddProduct = ({ onCloseAdd }) => {
 							data-modal-target="createProductModal"
 							data-modal-toggle="createProductModal">
 							<svg
-								aria-hidden="true"
-								className="w-5 h-5"
-								fill="currentColor"
-								viewBox="0 0 20 20"
-								xmlns="http://www.w3.org/2000/svg">
+								fill="none"
+								className="w-6 h-6"
+								stroke="currentColor"
+								strokeWidth={1.5}
+								viewBox="0 0 24 24"
+								xmlns="http://www.w3.org/2000/svg"
+								aria-hidden="true">
 								<path
-									fillRule="evenodd"
-									d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-									clipRule="evenodd"
+									strokeLinecap="round"
+									strokeLinejoin="round"
+									d="M6 18L18 6M6 6l12 12"
 								/>
 							</svg>
 							<span className="sr-only">Close modal</span>
@@ -192,10 +379,10 @@ const AddProduct = ({ onCloseAdd }) => {
 										className="hidden"
 									/>
 									<div
-										className={`p-2 flex justify-center flex-row gap-2 text-gray-500 dark:text-gray-400 cursor-pointer ${
+										className={`pt-1 flex items-center flex-col cursor-pointer ${
 											type === option.value
-												? 'ring-2 ring-blue-500 rounded'
-												: ''
+												? 'ring-2 ring-blue-500 rounded text-blue-400'
+												: 'text-gray-500 '
 										}`}>
 										<svg
 											fill="none"
@@ -206,7 +393,7 @@ const AddProduct = ({ onCloseAdd }) => {
 											className="w-6 h-6 ">
 											{option.path}
 										</svg>
-										<h1 className="text-gray-400 capitalize">{option.value}</h1>
+										<h1 className="capitalize">{option.value}</h1>
 									</div>
 								</label>
 							))}

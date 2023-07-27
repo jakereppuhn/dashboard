@@ -1,12 +1,18 @@
 import { useState } from 'react';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
+import Menu from './Menu';
 
 const Layout = ({ children }) => {
 	const [showSidebar, setShowSidebar] = useState(false);
+	const [showMenu, setShowMenu] = useState(false);
 
 	const toggleSidebar = () => {
 		setShowSidebar((prev) => !prev);
+	};
+
+	const toggleMenu = () => {
+		setShowMenu((prev) => !prev);
 	};
 
 	return (
@@ -32,6 +38,13 @@ const Layout = ({ children }) => {
 					{children}
 				</main>
 			</div>
+
+			{/* <button
+				onClick={toggleMenu}
+				className="fixed right-4 bottom-4 z-50 bg-blue-600 text-white rounded-full w-14 h-14 flex items-center justify-center">
+				+
+			</button>
+			{showMenu && <Menu onClose={toggleMenu} className="fixed inset-0 z-50" />} */}
 		</div>
 	);
 };

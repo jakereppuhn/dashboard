@@ -1,7 +1,7 @@
 import { Layout, ProductTable } from '../components';
 import { useGetAllProducts } from '../hooks/product/useGetProducts';
 
-const Product = () => {
+const Inventory = () => {
 	const { products } = useGetAllProducts();
 
 	return (
@@ -10,4 +10,4 @@ const Product = () => {
 		</Layout>
 	);
 };
-export default Product;
+export default Inventory;

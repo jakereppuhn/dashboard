@@ -1,7 +1,13 @@
 import { useState } from 'react';
 
-function Checkbox() {
+function Checkbox({ onChange }) {
 	const [checked, setChecked] = useState(false);
+
+	const handleClick = () => {
+		const newChecked = !checked;
+		setChecked(newChecked);
+		onChange(newChecked);
+	};
 
 	return (
 		<label className="relative inline-block cursor-pointer">
@@ -10,11 +16,13 @@ function Checkbox() {
 				type="checkbox"
 				className="sr-only"
 				checked={checked}
-				onChange={() => setChecked(!checked)}
+				onChange={handleClick}
 			/>
 			<div
-				className={`w-[18px] h-[18px] rounded  flex items-center justify-center border border-gray-500 ${
-					checked ? 'text-blue-400 border-blue-500' : 'bg-gray-800 text-gray-500'
+				className={`w-[18px] h-[18px] rounded  flex items-center justify-center border border-gray-500 p-0.5 ${
+					checked
+						? 'text-blue-400 border-blue-500'
+						: 'bg-gray-800 text-gray-500'
 				}`}>
 				<svg
 					fill="none"

@@ -6,7 +6,7 @@ import {
 	Navigate,
 	useLocation,
 } from 'react-router-dom';
-import { Dashboard, Product, SignIn } from './pages';
+import { Dashboard, Inventory, SignIn, UserSettings } from './pages';
 import { useAuthContext } from './hooks/user/useAuthContext';
 
 const ProtectedRoutes = () => {
@@ -36,12 +36,17 @@ const ProtectedRoutes = () => {
 
 			<Route
 				path="/dashboard"
-				element={user ? <Dashboard user={user}/> : <Navigate to="/signin" />}
+				element={user ? <Dashboard user={user} /> : <Navigate to="/signin" />}
+			/>
+			{/* change to inventory */}
+			<Route
+				path="/inventory"
+				element={user ? <Inventory /> : <Navigate to="/signin" />}
 			/>
 
 			<Route
-				path="/products"
-				element={user ? <Product /> : <Navigate to="/signin" />}
+				path="/settings"
+				element={user ? <UserSettings /> : <Navigate to="/signin" />}
 			/>
 		</Routes>
 	);

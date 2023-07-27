@@ -4,7 +4,7 @@ import Sidebar from './Sidebar';
 import Menu from './Menu';
 
 const Layout = ({ children }) => {
-	const [showSidebar, setShowSidebar] = useState(false);
+	const [showSidebar, setShowSidebar] = useState(true);
 	const [showMenu, setShowMenu] = useState(false);
 
 	const toggleSidebar = () => {

@@ -111,16 +111,9 @@ const DatePicker = ({ setDateRange }) => {
 	};
 
 	const isDateSelected = (date) => {
-		const selectedDate = new Date(
-			date.getFullYear(),
-			date.getMonth(),
-			date.getDate()
-		);
 		return (
-			startDate &&
-			endDate &&
-			selectedDate >= startDate &&
-			selectedDate <= endDate
+			(startDate && date.getTime() === startDate.getTime()) ||
+			(endDate && date.getTime() === endDate.getTime())
 		);
 	};
 
@@ -133,6 +126,14 @@ const DatePicker = ({ setDateRange }) => {
 		return (
 			startDate && endDate && selectedDate > startDate && selectedDate < endDate
 		);
+	};
+
+	const isStartDate = (date) => {
+		return startDate && date.getTime() === startDate.getTime();
+	};
+
+	const isEndDate = (date) => {
+		return endDate && date.getTime() === endDate.getTime();
 	};
 
 	const handlePrevMonth = () => {
@@ -334,19 +335,27 @@ const DatePicker = ({ setDateRange }) => {
 												<button
 													key={date.toISOString()}
 													onClick={() => handleDateClick(date)}>
-													<span
-														className={`flex items-center justify-center w-10 h-10 font-semibold ${
-															date.getMonth() === selectedMonth - 1
-																? 'text-white hover:bg-gray-900'
-																: 'text-gray-600 hover:bg-gray-900'
-														} ${
-															isDateSelected(date) &&
-															'bg-blue-500 bg-opacity-30 text-white'
-														} 
-														${isDateInRange(date) && 'bg-blue-100'}
+													<div
+														className={`${
+															(isDateInRange(date) && 'bg-blue-400') ||
+															(isDateSelected(date) && 'bg-blue-400')
+														} ${isStartDate(date) && 'rounded-l-lg'} ${
+															isEndDate(date) && 'rounded-r-lg'
 														}`}>
-														{date.getDate()}
-													</span>
+														<span
+															className={`flex items-center justify-center w-10 h-10 font-semibold hover:rounded-lg ${
+																date.getMonth() === selectedMonth - 1
+																	? 'text-white hover:bg-gray-900'
+																	: 'text-gray-600 hover:bg-gray-900'
+															} ${
+																isDateSelected(date) &&
+																'bg-blue-600  text-white rounded-lg'
+															} 
+														
+													}`}>
+															{date.getDate()}
+														</span>
+													</div>
 												</button>
 											))}
 										</div>

@@ -20,7 +20,6 @@ export const useGetAllProducts = () => {
 				},
 			});
 
-			// Apply sort logic directly to fetched products
 			const sortedData = [...data].sort((a, b) => {
 				let compareA, compareB;
 

@@ -5,12 +5,23 @@ import AddProduct from '../modals/AddProduct';
 import { useGetAllProducts } from '../../hooks/product/useGetProducts';
 
 const ProductTable = () => {
+	const { products, refetch } = useGetAllProducts();
+
+	const productsPerPage = 10;
+	const [currentPage, setCurrentPage] = useState(1);
+	const totalPages = Math.ceil(products.length / productsPerPage);
+
+	const handleClick = (newPage) => {
+		if (newPage < 1) newPage = 1;
+		if (newPage > totalPages) newPage = totalPages;
+		setCurrentPage(newPage);
+	};
+
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [actionDropdown, setActionDropdown] = useState(null);
-	const dropdownRef = useRef();
 
-	const { products, refetch } = useGetAllProducts();
+	const dropdownRef = useRef();
 
 	const toggleActionDropdown = (id) => {
 		setActionDropdown(actionDropdown === id ? null : id);
@@ -100,7 +111,6 @@ const ProductTable = () => {
 							<div className="flex w-full items-center space-x-3 md:w-auto">
 								<button
 									id="filterDropdownButton"
-									data-dropdown-toggle="filterDropdown"
 									className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
 									type="button">
 									<svg
@@ -305,7 +315,10 @@ const ProductTable = () => {
 						<span className="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
 							Showing
 							<span className="font-semibold text-gray-900 dark:text-white">
-								1-10
+								{(currentPage - 1) * productsPerPage + 1} -{' '}
+								{currentPage * productsPerPage > products.length
+									? products.length
+									: currentPage * productsPerPage}
 							</span>
 							of
 							<span className="font-semibold text-gray-900 dark:text-white">
@@ -314,8 +327,8 @@ const ProductTable = () => {
 						</span>
 						<ul className="inline-flex items-stretch -space-x-px">
 							<li>
-								<a
-									href="#"
+								<button
+									onClick={() => handleClick(currentPage - 1)}
 									className="ml-0 flex h-full items-center justify-center rounded-l-lg border border-gray-300 bg-white px-3 py-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ">
 									<span className="sr-only">Previous</span>
 									<svg
@@ -330,47 +343,24 @@ const ProductTable = () => {
 											clipRule="evenodd"
 										/>
 									</svg>
-								</a>
+								</button>
 							</li>
+							{[...Array(totalPages).keys()].map((num) => (
+								<li key={num}>
+									<button
+										onClick={() => handleClick(num + 1)}
+										className={`flex items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm leading-tight ${
+											currentPage === num + 1
+												? 'text-primary-600 bg-primary-50'
+												: 'text-gray-500'
+										} hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}>
+										{num + 1}
+									</button>
+								</li>
+							))}
 							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-									1
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-									2
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									aria-current="page"
-									className="z-10 flex items-center justify-center border border-primary-300 bg-primary-50 px-3 py-2 text-sm leading-tight text-primary-600 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
-									3
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-									...
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="flex items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-									100
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
+								<button
+									onClick={() => handleClick(currentPage + 1)}
 									className="flex h-full items-center justify-center rounded-r-lg border border-gray-300 bg-white px-3 py-1.5 leading-tight text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
 									<span className="sr-only">Next</span>
 									<svg
@@ -385,7 +375,7 @@ const ProductTable = () => {
 											clipRule="evenodd"
 										/>
 									</svg>
-								</a>
+								</button>
 							</li>
 						</ul>
 					</nav>

@@ -18,7 +18,9 @@ export const useGetAllProducts = (sortBy) => {
 						Authorization: `Bearer ${user.token}`,
 					},
 				});
-				const sortedData = data.sort((a, b) => a.name.localeCompare(b.name));
+				const sortedData = data.sort((a, b) =>
+					a.productName.localeCompare(b.productName)
+				);
 				setProducts(sortedData);
 			} catch (err) {
 				setError(err);
@@ -34,8 +36,8 @@ export const useGetAllProducts = (sortBy) => {
 		const sortedProducts = [...products].sort((a, b) => {
 			let compareA, compareB;
 
-			compareA = a.name.toUpperCase();
-			compareB = b.name.toUpperCase();
+			compareA = a.productName.toUpperCase();
+			compareB = b.productName.toUpperCase();
 
 			if (sortBy.endsWith('a-z')) {
 				return compareA < compareB ? -1 : compareA > compareB ? 1 : 0;

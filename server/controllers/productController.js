@@ -6,7 +6,9 @@ var SnowflakeId = require('snowflake-id').default;
 const getProduct = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
 
-	const product = await Product.findOne({ where: { productId: productId } });
+	const product = await Product.findOne({
+		where: { productId: productId } && { isArchived: false },
+	});
 
 	if (product) {
 		res.status(200).json(product);
@@ -18,23 +20,16 @@ const getProduct = asyncHandler(async (req, res) => {
 
 // Get All Products
 const getProducts = asyncHandler(async (req, res) => {
-	const products = await Product.findAll({ where: { userId: req.user.id } });
+	const products = await Product.findAll({
+		where: { userId: req.user.id } && { isArchived: false },
+	});
 
 	res.status(200).json(products);
 });
 
 // Create Product
 const createProduct = asyncHandler(async (req, res) => {
-	const {
-		productName,
-		productType,
-		attributes,
-		initialStock,
-		averageCost,
-		totalCost,
-		totalRevenue,
-		totalProfit,
-	} = req.body;
+	const { productName, productType, attributes, isArchived } = req.body;
 
 	const userId = req.user.id;
 
@@ -54,24 +49,22 @@ const createProduct = asyncHandler(async (req, res) => {
 	});
 
 	const product = await Product.create({
-		id: snowflake.generate(),
+		productId: snowflake.generate(),
 		userId,
-		name,
-		type: type || 'general',
+		productName,
+		productType: productType || 'general',
 		attributes: attributes || {},
-		initialStock: initialStock || 0,
-		currentStock: initialStock || 0,
+		isArchived: isArchived || false,
 	});
 
 	if (product) {
 		res.json({
 			productId: product.productId,
 			userId: product.userId,
-			name: product.name,
-			type: product.type,
+			productName: product.productName,
+			productType: product.productType,
 			attributes: product.attributes,
-			initialStock: product.initialStock,
-			currentStock: product.currentStock,
+			isArchived: product.isArchived,
 		});
 	} else {
 		res.status(400);
@@ -81,47 +74,21 @@ const createProduct = asyncHandler(async (req, res) => {
 
 // Update Product
 const updateProduct = asyncHandler(async (req, res) => {
-	const { id } = req.params;
-	const {
-		name,
-		sku,
-		description,
-		type,
-		attributes,
-		initialStock,
-		averageCost,
-		totalCost,
-		totalRevenue,
-		totalProfit,
-	} = req.body;
+	const { productId } = req.params;
+	const { productName, productType, attributes, isArchived } = req.body;
 
-	const product = await Product.findOne({ where: { id: id } });
+	const product = await Product.findOne({ where: { productId: productId } });
 
 	if (!product) {
 		res.status(404);
 		throw new Error('Product not found');
 	}
 
-	if (sku && sku !== product.sku) {
-		const skuExists = await Product.findOne({ where: { sku: sku } });
-		if (skuExists) {
-			res.status(400);
-			throw new Error('SKU already exists');
-		}
-	}
-
 	const updatedProduct = await product.update({
-		name: name || product.name,
-		sku: sku || product.sku,
-		description: description || product.description,
-		type: type || product.type,
+		productName: productName || product.productName,
+		productType: productType || product.productType,
 		attributes: attributes || product.attributes,
-		initialStock: initialStock || product.initialStock,
-		currentStock: initialStock || product.currentStock,
-		averageCost: averageCost || product.averageCost,
-		totalCost: totalCost || product.totalCost,
-		totalRevenue: totalRevenue || product.totalRevenue,
-		totalProfit: totalProfit || product.totalProfit,
+		isArchived: isArchived || product.isArchived,
 	});
 
 	res.status(200).json(updatedProduct);
@@ -129,8 +96,8 @@ const updateProduct = asyncHandler(async (req, res) => {
 
 // Delete Product
 const deleteProduct = asyncHandler(async (req, res) => {
-	const { id } = req.params;
-	const product = await Product.findOne({ where: { id: id } });
+	const { productId } = req.params;
+	const product = await Product.findOne({ where: { productId: productId } });
 
 	if (!product) {
 		res.status(404);

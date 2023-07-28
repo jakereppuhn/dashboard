@@ -8,30 +8,16 @@ export const useCreateProduct = () => {
 	const { user } = useAuthContext();
 
 	const createProduct = async (
-		name = '',
-		sku = '',
-		description = '',
-		type = '',
+		productName = null,
+		productType = null,
 		attributes = {},
-		isArchived = false,
-		initialStock = 0,
-		currentStock = 0,
-		totalCost = 0,
-		totalRevenue = 0,
-		totalProfit = 0
+		isArchived = false
 	) => {
 		const data = {
-			name,
-			sku,
-			description,
-			type,
+			productName,
+			productType,
 			attributes,
 			isArchived,
-			initialStock,
-			currentStock,
-			totalCost,
-			totalRevenue,
-			totalProfit,
 		};
 
 		axios

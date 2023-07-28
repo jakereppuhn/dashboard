@@ -28,16 +28,6 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: false,
 		},
-		initialStock: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		currentStock: {
-			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
 	});
 
 	Product.associate = (models) => {

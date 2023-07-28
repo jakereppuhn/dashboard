@@ -21,17 +21,20 @@ const ProductTable = () => {
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [actionDropdown, setActionDropdown] = useState(null);
 
+	const [productToDelete, setProductToDelete] = useState(null);
+
 	const dropdownRef = useRef();
 
-	const toggleActionDropdown = (id) => {
-		setActionDropdown(actionDropdown === id ? null : id);
+	const toggleActionDropdown = (productId) => {
+		setActionDropdown(actionDropdown === productId ? null : productId);
 	};
 
 	const toggleAddModal = () => {
 		setIsAddModalOpen(!isAddModalOpen);
 	};
 
-	const toggleDeleteModal = () => {
+	const toggleDeleteModal = (product) => {
+		setProductToDelete(product);
 		setActionDropdown(null);
 		setIsDeleteModalOpen(!isDeleteModalOpen);
 	};
@@ -272,15 +275,8 @@ const ProductTable = () => {
 												{actionDropdown === product.productId && (
 													<div
 														ref={dropdownRef}
-														className="absolute z-50 mt-44 w-44 divide-y divide-gray-100 rounded bg-white shadow dark:divide-gray-600 dark:bg-gray-700">
+														className="absolute z-50 mt-36 w-44 divide-y divide-gray-100 rounded bg-white shadow dark:divide-gray-600 dark:bg-gray-700">
 														<ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
-															<li>
-																<a
-																	href="#"
-																	className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-																	Show
-																</a>
-															</li>
 															<li>
 																<a
 																	href="#"
@@ -291,7 +287,7 @@ const ProductTable = () => {
 														</ul>
 														<div className="py-1">
 															<button
-																onClick={toggleDeleteModal}
+																onClick={() => toggleDeleteModal(product)}
 																className="block w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white">
 																Delete
 															</button>
@@ -308,7 +304,11 @@ const ProductTable = () => {
 							<AddProduct onCloseAdd={toggleAddModal} refetch={refetch} />
 						)}
 						{isDeleteModalOpen && (
-							<DeleteProduct onCloseDelete={toggleDeleteModal} />
+							<DeleteProduct
+								product={productToDelete}
+								onCloseDelete={toggleDeleteModal}
+								refetch={refetch}
+							/>
 						)}
 					</div>
 					<nav className="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0">

@@ -3,7 +3,7 @@ const { Product } = require('../models');
 var SnowflakeId = require('snowflake-id').default;
 
 // Get Product
-const getProduct = asyncHandler(async (req, res) => {
+const getProductById = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
 
 	const product = await Product.findOne({
@@ -19,7 +19,7 @@ const getProduct = asyncHandler(async (req, res) => {
 });
 
 // Get All Products
-const getProducts = asyncHandler(async (req, res) => {
+const getAllProducts = asyncHandler(async (req, res) => {
 	const products = await Product.findAll({
 		where: { userId: req.user.id } && { isArchived: false },
 	});
@@ -109,8 +109,8 @@ const deleteProduct = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-	getProduct,
-	getProducts,
+	getProductById,
+	getAllProducts,
 	createProduct,
 	updateProduct,
 	deleteProduct,

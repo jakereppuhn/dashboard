@@ -13,6 +13,7 @@ const Dashboard = () => {
 			{
 				data: [19000, 16500, 18000, 17000, 17500, 18500, 20000],
 				fill: true,
+				backgroundColor: 'rgba(102, 126, 234, 0.1)',
 				borderColor: 'rgba(102, 126, 234, 1)',
 				tension: 0.4,
 			},
@@ -25,6 +26,7 @@ const Dashboard = () => {
 			{
 				data: [5000, 5500, 6000, 5600, 5800, 6100, 7000],
 				fill: true,
+				backgroundColor: 'rgba(102, 126, 234, 0.1)',
 				borderColor: 'rgba(102, 126, 234, 1)',
 				tension: 0.4,
 			},
@@ -37,6 +39,7 @@ const Dashboard = () => {
 			{
 				data: [33.3, 33.3, 33.3, 32.9, 33.1, 33, 35],
 				fill: true,
+				backgroundColor: 'rgba(102, 126, 234, 0.1)',
 				borderColor: 'rgba(102, 126, 234, 1)',
 				tension: 0.4,
 			},
@@ -49,6 +52,7 @@ const Dashboard = () => {
 			{
 				data: [300, 330, 360, 340, 350, 370, 400],
 				fill: true,
+				backgroundColor: 'rgba(102, 126, 234, 0.1)',
 				borderColor: 'rgba(102, 126, 234, 1)',
 				tension: 0.4,
 			},

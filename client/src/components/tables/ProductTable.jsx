@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import DeleteProduct from './modals/DeleteProduct';
-import AddProduct from './modals/AddProduct';
+import DeleteProduct from '../modals/DeleteProduct';
+import AddProduct from '../modals/AddProduct';
 
 const ProductTable = ({ products }) => {
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);

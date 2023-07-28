@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 	const Product = sequelize.define('Product', {
-		id: {
+		productId: {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 			primaryKey: true,
@@ -9,21 +9,11 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BIGINT,
 			allowNull: true,
 		},
-		name: {
+		productName: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		sku: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			defaultValue: '',
-		},
-		description: {
-			type: DataTypes.STRING,
-			allowNull: false,
-			defaultValue: '',
-		},
-		type: {
+		productType: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			defaultValue: 'general',
@@ -45,21 +35,6 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		currentStock: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
-			defaultValue: 0,
-		},
-		totalCost: {
-			type: DataTypes.DECIMAL(10, 2),
-			allowNull: false,
-			defaultValue: 0,
-		},
-		totalRevenue: {
-			type: DataTypes.DECIMAL(10, 2),
-			allowNull: false,
-			defaultValue: 0,
-		},
-		totalProfit: {
-			type: DataTypes.DECIMAL(10, 2),
 			allowNull: false,
 			defaultValue: 0,
 		},

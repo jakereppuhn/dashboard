@@ -78,10 +78,6 @@ const AddProduct = ({ onCloseAdd }) => {
 	const labelClass =
 		'peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-disabled:opacity-50';
 
-	const handleGeneralAdmission = () => {
-		setGeneralAdmission(!generalAdmission);
-	};
-
 	const getCurrentDate = () => {
 		const date = new Date();
 		return `${date.getFullYear()}-${(date.getMonth() + 1)
@@ -145,9 +141,16 @@ const AddProduct = ({ onCloseAdd }) => {
 
 	const handleInputChange = (setterFunc) => (e) => setterFunc(e.target.value);
 
+	const resetForm = () => {
+		if (generalAdmission) {
+			setGeneralAdmission(!generalAdmission);
+		}
+	};
+
 	const renderFormBasedOnType = (type) => {
 		switch (type) {
 			case 'general':
+				resetForm();
 				return (
 					<div>
 						<div className="grid md:grid-cols-5 md:gap-6 mt-6">
@@ -158,7 +161,6 @@ const AddProduct = ({ onCloseAdd }) => {
 									className={inputClass}
 									placeholder=" "
 									autoComplete="off"
-									required
 								/>
 								<label className={labelClass}>Name</label>
 							</div>
@@ -168,7 +170,6 @@ const AddProduct = ({ onCloseAdd }) => {
 									name="productSku"
 									className={inputClass}
 									placeholder=" "
-									required
 								/>
 								<label className={labelClass}>Sku</label>
 							</div>
@@ -201,7 +202,6 @@ const AddProduct = ({ onCloseAdd }) => {
 								name="productDescription"
 								className={inputClass}
 								placeholder=" "
-								required
 							/>
 							<label className={labelClass}>Description</label>
 						</div>
@@ -218,7 +218,6 @@ const AddProduct = ({ onCloseAdd }) => {
 									className={inputClass}
 									placeholder=" "
 									autoComplete="off"
-									required
 								/>
 								<label className={labelClass}>Artist Name</label>
 							</div>
@@ -272,7 +271,11 @@ const AddProduct = ({ onCloseAdd }) => {
 									<label className=" text-sm text-gray-500 dark:text-gray-400">
 										GA
 									</label>
-									<Checkbox onChange={handleGeneralAdmission} />
+									<Checkbox
+										onChange={() => {
+											setGeneralAdmission(!generalAdmission);
+										}}
+									/>
 								</div>
 							</div>
 

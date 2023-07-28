@@ -5,9 +5,10 @@ import {
 	CategoryScale,
 	LinearScale,
 	PointElement,
+	Filler,
 } from 'chart.js';
 
-ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Filler);
 
 const cardChart = ({ data }) => {
 	const datasetValues = data.datasets.flatMap((dataset) => dataset.data);

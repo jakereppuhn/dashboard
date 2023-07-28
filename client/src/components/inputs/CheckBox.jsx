@@ -21,7 +21,7 @@ function Checkbox({ onChange }) {
 			<div
 				className={`w-[18px] h-[18px] rounded  flex items-center justify-center border border-gray-500 p-0.5 ${
 					checked
-						? 'text-blue-400 border-blue-500'
+						? 'text-blue-400 border-primary-500'
 						: 'bg-gray-800 text-gray-500'
 				}`}>
 				<svg

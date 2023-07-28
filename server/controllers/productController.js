@@ -4,9 +4,9 @@ var SnowflakeId = require('snowflake-id').default;
 
 // Get Product
 const getProduct = asyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { productId } = req.params;
 
-	const product = await Product.findOne({ where: { id: id } });
+	const product = await Product.findOne({ where: { productId: productId } });
 
 	if (product) {
 		res.status(200).json(product);
@@ -19,16 +19,15 @@ const getProduct = asyncHandler(async (req, res) => {
 // Get All Products
 const getProducts = asyncHandler(async (req, res) => {
 	const products = await Product.findAll({ where: { userId: req.user.id } });
+
 	res.status(200).json(products);
 });
 
 // Create Product
 const createProduct = asyncHandler(async (req, res) => {
 	const {
-		name,
-		sku,
-		description,
-		type,
+		productName,
+		productType,
 		attributes,
 		initialStock,
 		averageCost,
@@ -39,17 +38,14 @@ const createProduct = asyncHandler(async (req, res) => {
 
 	const userId = req.user.id;
 
-	if (!name) {
+	if (!productName) {
 		res.status(400);
-		throw new Error('Please enter product name');
+		throw new Error('Product name is required');
 	}
 
-	if (sku) {
-		const skuExists = await Product.findOne({ where: { sku: sku } });
-		if (skuExists) {
-			res.status(400);
-			throw new Error('SKU already exists');
-		}
+	if (!productType) {
+		res.status(400);
+		throw new Error('Product type is required');
 	}
 
 	var snowflake = new SnowflakeId({
@@ -59,35 +55,23 @@ const createProduct = asyncHandler(async (req, res) => {
 
 	const product = await Product.create({
 		id: snowflake.generate(),
+		userId,
 		name,
-		sku,
-		description,
 		type: type || 'general',
 		attributes: attributes || {},
-		userId,
 		initialStock: initialStock || 0,
 		currentStock: initialStock || 0,
-		averageCost: averageCost || 0,
-		totalCost: totalCost || 0,
-		totalRevenue: totalRevenue || 0,
-		totalProfit: totalProfit || 0,
 	});
 
 	if (product) {
 		res.json({
-			id: product.id,
+			productId: product.productId,
 			userId: product.userId,
 			name: product.name,
-			sku: product.sku,
-			description: product.description,
 			type: product.type,
 			attributes: product.attributes,
 			initialStock: product.initialStock,
 			currentStock: product.currentStock,
-			averageCost: product.averageCost,
-			totalCost: product.totalCost,
-			totalRevenue: product.totalRevenue,
-			totalProfit: product.totalProfit,
 		});
 	} else {
 		res.status(400);

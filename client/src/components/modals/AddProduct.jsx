@@ -2,18 +2,10 @@ import { useState, useEffect } from 'react';
 import { useCreateProduct } from '../../hooks/product/useCreateProduct';
 import Checkbox from '../inputs/CheckBox';
 
-const AddProduct = ({ onCloseAdd }) => {
-	const [name, setName] = useState('');
-	const [sku, setSku] = useState('');
-	const [description, setDescription] = useState('');
-	const [type, setType] = useState('general');
+const AddProduct = ({ onCloseAdd, refetch }) => {
+	const [productName, setProductName] = useState('');
+	const [productType, setProductType] = useState('general');
 	const [attributes, setAttributes] = useState({});
-	const [initialStock, setInitialStock] = useState(0);
-	const [artist, setArtist] = useState('');
-	const [venue, setVenue] = useState('');
-	const [section, setSection] = useState('');
-	const [row, setRow] = useState('');
-	const [seat, setSeat] = useState('');
 
 	const [generalAdmission, setGeneralAdmission] = useState(false);
 
@@ -104,39 +96,25 @@ const AddProduct = ({ onCloseAdd }) => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		let productName = name;
-		let productAttributes = attributes;
-
-		if (type === 'general') {
-			productAttributes = {};
-		} else if (type === 'ticket') {
-			productName = `${artist} ${venue}`;
-			productAttributes = {
-				artist,
-				venue,
-				date,
-				time,
-				section,
-				row,
-				seat,
-			};
-		} else if (type === 'clothing') {
-			productAttributes = {};
-		} else if (type === 'sneakers') {
-			productAttributes = {};
+		if (productType === 'general') {
+			setAttributes({});
+		} else if (productType === 'ticket') {
+			setProductName(`${date} ${time}`);
+		} else if (productType === 'clothing') {
+			setAttributes({});
+		} else if (productType === 'sneakers') {
+			setAttributes({});
 		} else {
-			productAttributes = {};
+			setAttributes({});
 		}
 
-		createProduct(
-			productName,
-			sku,
-			description,
-			type,
-			productAttributes,
-			initialStock
-		);
+		let isArchived = false;
+		await createProduct(productName, productType, attributes, isArchived);
+
 		onCloseAdd();
+		setTimeout(() => {
+			refetch();
+		}, 500);
 	};
 
 	const handleInputChange = (setterFunc) => (e) => setterFunc(e.target.value);
@@ -147,8 +125,8 @@ const AddProduct = ({ onCloseAdd }) => {
 		}
 	};
 
-	const renderFormBasedOnType = (type) => {
-		switch (type) {
+	const renderFormBasedOnType = (productType) => {
+		switch (productType) {
 			case 'general':
 				resetForm();
 				return (
@@ -158,6 +136,8 @@ const AddProduct = ({ onCloseAdd }) => {
 								<input
 									type="text"
 									name="productName"
+									value={productName}
+									onChange={handleInputChange(setProductName)}
 									className={inputClass}
 									placeholder=" "
 									autoComplete="off"
@@ -355,7 +335,7 @@ const AddProduct = ({ onCloseAdd }) => {
 						</button>
 					</div>
 
-					<form action="#">
+					<form onSubmit={handleSubmit}>
 						<div className="flex w-full gap-4">
 							{options.map((option) => (
 								<label key={option.value} className="w-full">
@@ -363,13 +343,13 @@ const AddProduct = ({ onCloseAdd }) => {
 										type="radio"
 										name="productType"
 										value={option.value}
-										checked={type === option.value}
-										onChange={(e) => setType(e.target.value)}
+										checked={productType === option.value}
+										onChange={(e) => setProductType(e.target.value)}
 										className="hidden"
 									/>
 									<div
 										className={`pt-1 flex items-center flex-col cursor-pointer ${
-											type === option.value
+											productType === option.value
 												? 'ring-2 ring-blue-500 rounded text-blue-400'
 												: 'text-gray-500 '
 										}`}>
@@ -388,7 +368,7 @@ const AddProduct = ({ onCloseAdd }) => {
 							))}
 						</div>
 
-						{renderFormBasedOnType(type)}
+						{renderFormBasedOnType(productType)}
 
 						<button
 							type="submit"

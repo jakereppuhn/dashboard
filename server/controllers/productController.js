@@ -85,10 +85,10 @@ const updateProduct = asyncHandler(async (req, res) => {
 	}
 
 	const updatedProduct = await product.update({
-		productName: productName || product.productName,
-		productType: productType || product.productType,
-		attributes: attributes || product.attributes,
-		isArchived: isArchived || product.isArchived,
+		productName: productName !== undefined ? productName : product.productName,
+		productType: productType !== undefined ? productType : product.productType,
+		attributes: attributes !== undefined ? attributes : product.attributes,
+		isArchived: isArchived !== undefined ? isArchived : product.isArchived,
 	});
 
 	res.status(200).json(updatedProduct);

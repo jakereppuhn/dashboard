@@ -2,12 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DeleteProduct from '../modals/DeleteProduct';
 import AddProduct from '../modals/AddProduct';
+import { useGetAllProducts } from '../../hooks/product/useGetProducts';
 
-const ProductTable = ({ products }) => {
+const ProductTable = () => {
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 	const [actionDropdown, setActionDropdown] = useState(null);
 	const dropdownRef = useRef();
+
+	const { products, refetch } = useGetAllProducts();
 
 	const toggleActionDropdown = (id) => {
 		setActionDropdown(actionDropdown === id ? null : id);
@@ -230,18 +233,22 @@ const ProductTable = ({ products }) => {
 												scope="row"
 												className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
 												<Link
-													to={`/products/${product.id}`}
+													to={`/products/${product.productId}`}
 													className="hover:underline">
-													{product.name}
+													{product.productName}
 												</Link>
 											</th>
-											<td className="px-4 py-3 capitalize">{product.type}</td>
+											<td className="px-4 py-3 capitalize">
+												{product.productType}
+											</td>
 											<td className="px-4 py-3">Apple</td>
 											<td className="px-4 py-3">300</td>
 											<td className="px-4 py-3">$2999</td>
 											<td className="flex items-center justify-end px-4 py-3">
 												<button
-													onClick={() => toggleActionDropdown(product.id)}
+													onClick={() =>
+														toggleActionDropdown(product.productId)
+													}
 													className="inline-flex items-center rounded-lg p-0.5 text-center text-sm font-medium text-gray-500 hover:text-gray-800 focus:outline-none dark:text-gray-400 dark:hover:text-gray-100">
 													<svg
 														className="h-5 w-5"
@@ -252,7 +259,7 @@ const ProductTable = ({ products }) => {
 														<path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
 													</svg>
 												</button>
-												{actionDropdown === product.id && (
+												{actionDropdown === product.productId && (
 													<div
 														ref={dropdownRef}
 														className="absolute z-50 mt-44 w-44 divide-y divide-gray-100 rounded bg-white shadow dark:divide-gray-600 dark:bg-gray-700">
@@ -287,7 +294,9 @@ const ProductTable = ({ products }) => {
 								))}
 							</tbody>
 						</table>
-						{isAddModalOpen && <AddProduct onCloseAdd={toggleAddModal} />}
+						{isAddModalOpen && (
+							<AddProduct onCloseAdd={toggleAddModal} refetch={refetch} />
+						)}
 						{isDeleteModalOpen && (
 							<DeleteProduct onCloseDelete={toggleDeleteModal} />
 						)}

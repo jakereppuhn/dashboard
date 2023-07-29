@@ -17,13 +17,15 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
+		quantityRemaining: {
+			type: DataTypes.INTEGER,
+		},
 		pricePerUnit: {
 			type: DataTypes.DECIMAL(10, 2),
 			allowNull: false,
 		},
 		orderDate: {
 			type: DataTypes.DATE,
-			allowNull: false,
 			defaultValue: DataTypes.NOW,
 		},
 		orderType: {

@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const { Order, Inventory, OrderMapping } = require('../models');
+const { Op } = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
 
 // Get All Orders for a User
@@ -51,6 +52,7 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
 		userId: userId,
 		productId: productId,
 		orderQuantity,
+		quantityRemaining: orderQuantity,
 		pricePerUnit,
 		orderDate: new Date(orderDate),
 		orderType: 'purchase',
@@ -84,7 +86,11 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 	});
 
 	const purchaseOrders = await Order.findAll({
-		where: { productId, orderType: 'purchase' },
+		where: {
+			productId,
+			orderType: 'purchase',
+			quantityRemaining: { [Op.gt]: 0 },
+		},
 		order: ['orderDate'],
 	});
 
@@ -110,16 +116,15 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 
 	for (const purchaseOrder of purchaseOrders) {
 		let quantityToAssociate;
-		let remainingQuantity = purchaseOrder.orderQuantity;
 
-		if (remainingQuantity >= orderQuantity) {
+		if (purchaseOrder.quantityRemaining >= orderQuantity) {
 			quantityToAssociate = orderQuantity;
-			remainingQuantity -= orderQuantity;
+			purchaseOrder.quantityRemaining -= orderQuantity;
 			orderQuantity = 0;
 		} else {
-			quantityToAssociate = remainingQuantity;
-			orderQuantity -= remainingQuantity;
-			remainingQuantity = 0;
+			quantityToAssociate = purchaseOrder.quantityRemaining;
+			orderQuantity -= purchaseOrder.quantityRemaining;
+			purchaseOrder.quantityRemaining = 0;
 		}
 
 		if (quantityToAssociate > 0) {
@@ -132,6 +137,8 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 			};
 			await OrderMapping.create(mappingData);
 		}
+
+		await purchaseOrder.save();
 
 		if (orderQuantity === 0) break;
 	}

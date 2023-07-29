@@ -26,10 +26,6 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: DataTypes.NOW,
 		},
-		inventoryBatchId: {
-			type: DataTypes.BIGINT,
-			allowNull: false,
-		},
 		type: {
 			type: DataTypes.ENUM,
 			values: ['purchase', 'sale'],

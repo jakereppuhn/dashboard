@@ -1,6 +1,8 @@
 const asyncHandler = require('express-async-handler');
-const { Order } = require('../models');
-const { Product } = require('../models');
+const { Op } = require('sequelize');
+const Sequelize = require('sequelize');
+const { InventoryBatch, Order, OrderBatch } = require('../models');
+const sequelize = InventoryBatch.sequelize;
 var SnowflakeId = require('snowflake-id').default;
 
 // Get All Orders for a User
@@ -48,6 +50,15 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
 
 	const orderId = snowflake.generate();
 
+	const inventoryBatch = await InventoryBatch.create({
+		id: snowflake.generate(),
+		productId: productId,
+		purchasePrice: unitPrice,
+		quantity,
+		remainingQuantity: quantity,
+		purchaseDate: new Date(date),
+	});
+
 	const newOrder = await Order.create({
 		id: orderId,
 		userId: userId,
@@ -58,14 +69,11 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
 		type: 'purchase',
 	});
 
-	const inventoryBatch = await InventoryBatch.create({
-		id: snowflake.generate(),
+	await OrderBatch.create({
 		orderId: orderId,
-		remainingQuantity: quantity,
-		costPerUnit: unitPrice,
+		inventoryBatchId: inventoryBatch.id,
+		quantity,
 	});
-
-	// You can add further logic here like updating product stocks etc.
 
 	res.json({
 		order: newOrder,
@@ -78,36 +86,83 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 	const productId = req.params.productId;
 	const userId = req.user.id;
 
+	var snowflake = new SnowflakeId({
+		mid: 42,
+		offset: (2019 - 1970) * 31536000 * 1000,
+	});
+
 	const orderId = snowflake.generate();
+
+	let totalQuantitySold = 0;
+
+	const inventoryBatches = await InventoryBatch.findAll({
+		where: { productId: productId, remainingQuantity: { [Op.gt]: 0 } },
+		order: [['purchasePrice', 'ASC']],
+	});
+
+	for (let batch of inventoryBatches) {
+		if (totalQuantitySold >= quantity) break;
+		let quantityForThisBatch;
+
+		if (batch.remainingQuantity + totalQuantitySold <= quantity) {
+			quantityForThisBatch = batch.remainingQuantity;
+		} else {
+			quantityForThisBatch = quantity - totalQuantitySold;
+		}
+
+		const transaction = await sequelize.transaction();
+
+		try {
+			await batch.update(
+				{
+					remainingQuantity: Sequelize.literal(
+						`remainingQuantity - ${quantityForThisBatch}`
+					),
+				},
+				{ transaction }
+			);
+			console.log({
+				orderId: orderId,
+				inventoryBatchId: batch.id,
+				quantity: quantityForThisBatch,
+			});
+
+			await OrderBatch.create(
+				{
+					orderId: orderId,
+					inventoryBatchId: batch.id,
+					quantity: quantityForThisBatch,
+				},
+				{ transaction }
+			);
+
+			await transaction.commit();
+		} catch (err) {
+			await transaction.rollback();
+			throw err;
+		}
+
+		totalQuantitySold += quantityForThisBatch;
+	}
+
+	if (totalQuantitySold !== quantity) {
+		return res.status(400).json({
+			message: 'Insufficient quantity available across all batches.',
+		});
+	}
 
 	const newOrder = await Order.create({
 		id: orderId,
 		userId: userId,
 		productId: productId,
-		quantity,
+		quantity: quantity,
 		unitPrice,
 		date: new Date(date),
 		type: 'sale',
 	});
 
-	const inventoryBatch = await InventoryBatch.findOne({
-		where: { remainingQuantity: { [Op.gt]: 0 } },
-		order: [['costPerUnit', 'ASC']],
-	});
-
-	if (inventoryBatch && inventoryBatch.remainingQuantity >= quantity) {
-		await inventoryBatch.update({
-			remainingQuantity: Sequelize.literal(`remainingQuantity - ${quantity}`),
-		});
-	} else {
-		// Handle scenario where there's not enough quantity in any batch
-	}
-
-	// You can add further logic here like updating product stocks etc.
-
 	res.json({
 		order: newOrder,
-		inventoryBatch: inventoryBatch,
 	});
 });
 

@@ -7,10 +7,12 @@ import {
 	PointElement,
 	Filler,
 } from 'chart.js';
+import { useRef } from 'react';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Filler);
 
-const cardChart = ({ data }) => {
+const CardChart = ({ data }) => {
+	const chartRef = useRef(null);
 	const datasetValues = data.datasets.flatMap((dataset) => dataset.data);
 
 	const maxValue = Math.max(...datasetValues);
@@ -39,9 +41,35 @@ const cardChart = ({ data }) => {
 				max: maxValue,
 			},
 		},
+		onHover: (event, chartElement) => {
+			event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
+		},
 	};
 
-	return <Line data={data} options={options}></Line>;
+	const gradientPlugin = {
+		id: 'gradientPlugin',
+		beforeUpdate: (chart) => {
+			const ctx = chart.canvas.getContext('2d');
+			const gradient = ctx.createLinearGradient(0, 0, 0, chart.height);
+			gradient.addColorStop(0, 'rgba(67, 97, 238, 0.5)');
+			gradient.addColorStop(1, 'rgba(67, 97, 238, 0.0)');
+
+			const newDatasets = chart.data.datasets.map((dataset) => {
+				return { ...dataset, backgroundColor: gradient };
+			});
+
+			chart.data.datasets = newDatasets;
+		},
+	};
+
+	return (
+		<Line
+			ref={chartRef}
+			data={data}
+			options={options}
+			plugins={[gradientPlugin]}
+		/>
+	);
 };
 
-export default cardChart;
+export default CardChart;

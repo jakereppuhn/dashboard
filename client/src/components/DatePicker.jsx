@@ -254,7 +254,7 @@ const DatePicker = ({ setDateRange }) => {
 										<li key={option.value}>
 											<button
 												onClick={() => handleFilterOptions(option)}
-												className="px-6 py-1.5 w-full leading-5 rounded-r hover:bg-gray-50 hover:text-blue-600 text-left dark:hover:bg-gray-900 dark:hover:text-gray-400">
+												className="px-6 py-1.5 w-full leading-5 rounded-r hover:bg-gray-50 hover:text-primary text-left dark:hover:bg-gray-900 dark:hover:text-gray-400">
 												{option.text}
 											</button>
 										</li>
@@ -336,9 +336,9 @@ const DatePicker = ({ setDateRange }) => {
 													key={date.toISOString()}
 													onClick={() => handleDateClick(date)}>
 													<div
-														className={`${
-															(isDateInRange(date) && 'bg-blue-400') ||
-															(isDateSelected(date) && 'bg-blue-400')
+														className={`bg-opacity-50 ${
+															(isDateInRange(date) && 'bg-primary') ||
+															(isDateSelected(date) && 'bg-primary')
 														} ${isStartDate(date) && 'rounded-l-lg'} ${
 															isEndDate(date) && 'rounded-r-lg'
 														}`}>
@@ -349,7 +349,7 @@ const DatePicker = ({ setDateRange }) => {
 																	: 'text-gray-600 hover:bg-gray-900'
 															} ${
 																isDateSelected(date) &&
-																'bg-blue-600  text-white rounded-lg'
+																'bg-primary  text-white rounded-lg'
 															} 
 														
 													}`}>

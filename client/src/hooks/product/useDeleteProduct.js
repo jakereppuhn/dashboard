@@ -11,7 +11,6 @@ export const useDeleteProduct = (productId) => {
 	const deleteProduct = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			console.log('productId', productId);
 			await axios.delete(`http://localhost:3001/api/product/${productId}`, {
 				headers: {
 					Authorization: `Bearer ${user.token}`,

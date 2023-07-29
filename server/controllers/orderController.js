@@ -108,15 +108,16 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 
 	for (const purchaseOrder of purchaseOrders) {
 		let quantityToAssociate;
+		let remainingQuantity = purchaseOrder.orderQuantity;
 
-		if (purchaseOrder.orderQuantity >= orderQuantity) {
+		if (remainingQuantity >= orderQuantity) {
 			quantityToAssociate = orderQuantity;
-			purchaseOrder.orderQuantity -= orderQuantity;
+			remainingQuantity -= orderQuantity;
 			orderQuantity = 0;
 		} else {
-			quantityToAssociate = purchaseOrder.orderQuantity;
-			orderQuantity -= purchaseOrder.orderQuantity;
-			purchaseOrder.orderQuantity = 0;
+			quantityToAssociate = remainingQuantity;
+			orderQuantity -= remainingQuantity;
+			remainingQuantity = 0;
 		}
 
 		if (quantityToAssociate > 0) {
@@ -129,8 +130,6 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 			};
 			await OrderMapping.create(mappingData);
 		}
-
-		await purchaseOrder.save();
 
 		if (orderQuantity === 0) break;
 	}

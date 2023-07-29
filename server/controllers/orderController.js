@@ -72,7 +72,7 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
 });
 
 const createSaleOrder = asyncHandler(async (req, res) => {
-	const { orderQuantity, pricePerUnit, orderDate } = req.body;
+	let { orderQuantity, pricePerUnit, orderDate } = req.body;
 	const productId = req.params.productId;
 	const userId = req.user.userId;
 
@@ -96,7 +96,7 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 		await inventoryItem.save();
 	}
 
-	const saleOrder = await Order.create({
+	const salesOrder = await Order.create({
 		orderId: snowflake.generate(),
 		userId: userId,
 		productId: productId,
@@ -106,35 +106,41 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 		orderType: 'sale',
 	});
 
-	let quantityLeft = orderQuantity;
+	for (const purchaseOrder of purchaseOrders) {
+		let quantityToAssociate;
 
-	for (let purchaseOrder of purchaseOrders) {
-		if (purchaseOrder.orderQuantity >= quantityLeft) {
-			await OrderMapping.create({
-				orderMappingId: snowflake.generate(),
-				saleOrderId: saleOrder.orderId,
-				purchaseOrderId: purchaseOrder.orderId,
-				quantityFromPurchase: quantityLeft,
-				purchaseCostPerUnit: purchaseOrder.pricePerUnit,
-			});
-			purchaseOrder.orderQuantity -= quantityLeft;
-			await purchaseOrder.save();
-			break;
+		if (purchaseOrder.orderQuantity >= orderQuantity) {
+			quantityToAssociate = orderQuantity;
+			purchaseOrder.orderQuantity -= orderQuantity;
+			orderQuantity = 0;
 		} else {
-			await OrderMapping.create({
-				orderMappingId: snowflake.generate(),
-				saleOrderId: saleOrder.orderId,
-				purchaseOrderId: purchaseOrder.orderId,
-				quantityFromPurchase: purchaseOrder.orderQuantity,
-				purchaseCostPerUnit: purchaseOrder.pricePerUnit,
-			});
-			quantityLeft -= purchaseOrder.orderQuantity;
+			quantityToAssociate = purchaseOrder.orderQuantity;
+			orderQuantity -= purchaseOrder.orderQuantity;
 			purchaseOrder.orderQuantity = 0;
-			await purchaseOrder.save();
 		}
+
+		if (quantityToAssociate > 0) {
+			const mappingData = {
+				orderMappingId: snowflake.generate(),
+				saleOrderId: salesOrder.orderId,
+				purchaseOrderId: purchaseOrder.orderId,
+				quantityFromPurchase: quantityToAssociate,
+				purchaseCostPerUnit: purchaseOrder.pricePerUnit,
+			};
+			await OrderMapping.create(mappingData);
+		}
+
+		await purchaseOrder.save();
+
+		if (orderQuantity === 0) break;
 	}
 
-	res.json(saleOrder);
+	if (orderQuantity > 0) {
+		res.status(400);
+		throw new Error('Not enough stock to fulfill the order');
+	}
+
+	res.json(salesOrder);
 });
 
 const createOrder = asyncHandler(async (req, res) => {

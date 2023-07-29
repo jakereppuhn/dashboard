@@ -35,6 +35,7 @@ const getOrder = asyncHandler(async (req, res) => {
 	res.status(200).json(order);
 });
 
+// Create Purchase Order
 const createPurchaseOrder = asyncHandler(async (req, res) => {
 	const { orderQuantity, pricePerUnit, orderDate } = req.body;
 	const productId = req.params.productId;
@@ -71,6 +72,7 @@ const createPurchaseOrder = asyncHandler(async (req, res) => {
 	res.json(purchaseOrder);
 });
 
+// Create Sale Order
 const createSaleOrder = asyncHandler(async (req, res) => {
 	let { orderQuantity, pricePerUnit, orderDate } = req.body;
 	const productId = req.params.productId;
@@ -142,6 +144,7 @@ const createSaleOrder = asyncHandler(async (req, res) => {
 	res.json(salesOrder);
 });
 
+// Create Order
 const createOrder = asyncHandler(async (req, res) => {
 	const { orderType } = req.body;
 

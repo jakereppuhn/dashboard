@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-	const Purchase = sequelize.define('Purchase', {
+	const Order = sequelize.define('Order', {
 		id: {
 			type: DataTypes.BIGINT,
 			allowNull: false,
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.DECIMAL(10, 2),
 			allowNull: false,
 		},
-		purchaseDate: {
+		orderDate: {
 			type: DataTypes.DATE,
 			allowNull: false,
 			defaultValue: DataTypes.NOW,
@@ -30,18 +30,23 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 		},
+		type: {
+			type: DataTypes.ENUM,
+			values: ['purchase', 'sale'],
+			allowNull: false,
+		},
 	});
 
-	Purchase.associate = (models) => {
-		Purchase.belongsTo(models.Product, {
+	Order.associate = (models) => {
+		Order.belongsTo(models.Product, {
 			foreignKey: 'productId',
 			as: 'product',
 		});
-		Purchase.belongsTo(models.User, {
+		Order.belongsTo(models.User, {
 			foreignKey: 'userId',
 			as: 'user',
 		});
 	};
 
-	return Purchase;
+	return Order;
 };

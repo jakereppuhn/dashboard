@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import {
 	Dashboard,
-	Inventory,
+	Products,
 	SignIn,
 	Transactions,
 	UserSettings,
@@ -38,8 +38,8 @@ const ProtectedRoutes = () => {
 			/>
 
 			<Route
-				path="/inventory"
-				element={user ? <Inventory /> : <Navigate to="/signin" />}
+				path="/products"
+				element={user ? <Products /> : <Navigate to="/signin" />}
 			/>
 
 			<Route

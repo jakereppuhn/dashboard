@@ -1,10 +1,10 @@
 import { Layout, ProductTable } from '../components';
 
-const Inventory = () => {
+const Products = () => {
 	return (
 		<Layout>
 			<ProductTable />
 		</Layout>
 	);
 };
-export default Inventory;
+export default Products;

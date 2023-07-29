@@ -31,7 +31,7 @@ const createUser = asyncHandler(async (req, res) => {
 	const userPassword = await bcrypt.hash(password, 10);
 
 	const user = await User.create({
-		id: snowflake.generate(),
+		userId: snowflake.generate(),
 		firstName,
 		lastName,
 		email,
@@ -41,7 +41,7 @@ const createUser = asyncHandler(async (req, res) => {
 	if (user) {
 		const accessToken = sign(
 			{
-				id: user.id,
+				userId: user.userId,
 				firstName: user.firstName,
 				lastName: user.lastName,
 				email: user.email,
@@ -50,7 +50,7 @@ const createUser = asyncHandler(async (req, res) => {
 		);
 		res.json({
 			token: accessToken,
-			id: user.id,
+			userId: user.userId,
 			firstName: user.firstName,
 			lastName: user.lastName,
 			email: user.email,
@@ -82,7 +82,7 @@ const authUser = asyncHandler(async (req, res) => {
 		}
 		const accessToken = sign(
 			{
-				id: user.id,
+				userId: user.userId,
 				firstName: user.firstName,
 				lastName: user.lastName,
 				email: user.email,
@@ -91,7 +91,7 @@ const authUser = asyncHandler(async (req, res) => {
 		);
 		res.json({
 			token: accessToken,
-			id: user.id,
+			userId: user.userId,
 			firstName: user.firstName,
 			lastName: user.lastName,
 			email: user.email,

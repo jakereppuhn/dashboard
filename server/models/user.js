@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define('User', {
-		id: {
+		userId: {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 			primaryKey: true,
@@ -28,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		accountType: {
 			type: DataTypes.ENUM,
-			values: ['admin', 'trial', 'monthly', 'annual', 'lifetime'],
+			values: ['admin', 'trial', 'monthly', 'lifetime'],
 			allowNull: false,
 			defaultValue: 'trial',
 		},
@@ -39,10 +39,10 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: 'userId',
 			as: 'products',
 		});
-		// User.hasMany(models.Purchase, {
-		// 	foreignKey: 'userId',
-		// 	as: 'purchases',
-		// });
+		User.hasMany(models.Order, {
+			foreignKey: 'userId',
+			as: 'orders',
+		});
 	};
 
 	return User;

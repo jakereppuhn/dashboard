@@ -14,11 +14,11 @@ const protect = asyncHandler(async (req, res, next) => {
 
 			//decodes token id
 			const decoded = jwt.verify(token, 'ImportantSecret');
-			console.log('Decoded:', decoded);
+			// console.log('Decoded:', decoded);
 
 			// Fetch the user from the database
-			req.user = await User.findByPk(decoded.id);
-			console.log('User:', req.user);
+			req.user = await User.findByPk(decoded.userId);
+			// console.log('User:', req.user);
 
 			next();
 		} catch (error) {

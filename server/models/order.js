@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 	const Order = sequelize.define('Order', {
-		id: {
+		orderId: {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 			primaryKey: true,
@@ -13,11 +13,11 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 		},
-		quantity: {
+		orderQuantity: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
-		unitPrice: {
+		pricePerUnit: {
 			type: DataTypes.DECIMAL(10, 2),
 			allowNull: false,
 		},
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: DataTypes.NOW,
 		},
-		type: {
+		orderType: {
 			type: DataTypes.ENUM,
 			values: ['purchase', 'sale'],
 			allowNull: false,

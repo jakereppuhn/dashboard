@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: false,
 			defaultValue: 'general',
 		},
-		attributes: {
+		productAttributes: {
 			type: DataTypes.JSON,
 			allowNull: false,
 			defaultValue: {},

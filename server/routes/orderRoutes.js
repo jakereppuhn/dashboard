@@ -14,10 +14,10 @@ router.get('/', protect, getOrders);
 
 router.get('/:productId', protect, getOrdersByProduct);
 
-router.get('/:id', protect, getOrder);
+router.get('/:orderId', protect, getOrder);
 
 router.post('/:productId', protect, createOrder);
 
-router.delete('/:id', protect, deleteOrder);
+router.delete('/:orderId', protect, deleteOrder);
 
 module.exports = router;

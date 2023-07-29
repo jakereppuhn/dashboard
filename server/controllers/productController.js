@@ -21,7 +21,7 @@ const getProductById = asyncHandler(async (req, res) => {
 // Get All Products
 const getAllProducts = asyncHandler(async (req, res) => {
 	const products = await Product.findAll({
-		where: { userId: req.user.id } && { isArchived: false },
+		where: { userId: req.user.userId } && { isArchived: false },
 	});
 
 	res.status(200).json(products);
@@ -29,9 +29,13 @@ const getAllProducts = asyncHandler(async (req, res) => {
 
 // Create Product
 const createProduct = asyncHandler(async (req, res) => {
-	const { productName, productType, attributes, isArchived } = req.body;
+	const { productName, productType, productAttributes, isArchived } = req.body;
 
-	const userId = req.user.id;
+	if (!req.user) {
+		res.status(401);
+		throw new Error('Not authorized, no user found');
+	}
+	const userId = req.user.userId;
 
 	if (!productName) {
 		res.status(400);
@@ -53,7 +57,7 @@ const createProduct = asyncHandler(async (req, res) => {
 		userId,
 		productName,
 		productType: productType || 'general',
-		attributes: attributes || {},
+		productAttributes: productAttributes || {},
 		isArchived: isArchived || false,
 	});
 
@@ -63,7 +67,7 @@ const createProduct = asyncHandler(async (req, res) => {
 			userId: product.userId,
 			productName: product.productName,
 			productType: product.productType,
-			attributes: product.attributes,
+			productAttributes: product.productAttributes,
 			isArchived: product.isArchived,
 		});
 	} else {
@@ -75,7 +79,7 @@ const createProduct = asyncHandler(async (req, res) => {
 // Update Product
 const updateProduct = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
-	const { productName, productType, attributes, isArchived } = req.body;
+	const { productName, productType, productAttributes, isArchived } = req.body;
 
 	const product = await Product.findOne({ where: { productId: productId } });
 
@@ -87,7 +91,10 @@ const updateProduct = asyncHandler(async (req, res) => {
 	const updatedProduct = await product.update({
 		productName: productName !== undefined ? productName : product.productName,
 		productType: productType !== undefined ? productType : product.productType,
-		attributes: attributes !== undefined ? attributes : product.attributes,
+		productAttributes:
+			productAttributes !== undefined
+				? productAttributes
+				: product.productAttributes,
 		isArchived: isArchived !== undefined ? isArchived : product.isArchived,
 	});
 

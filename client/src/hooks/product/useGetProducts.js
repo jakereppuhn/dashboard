@@ -14,11 +14,14 @@ export const useGetAllProducts = () => {
 	const fetchProducts = useCallback(async () => {
 		setIsLoading(true);
 		try {
-			const { data } = await axios.get('http://localhost:3001/api/product', {
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-				},
-			});
+			const { data } = await axios.get(
+				'http://localhost:3001/api/v1/products',
+				{
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
 
 			const sortedData = [...data].sort((a, b) => {
 				let compareA, compareB;

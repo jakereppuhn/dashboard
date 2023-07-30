@@ -4,19 +4,33 @@ const { Op } = require('sequelize');
 const Sequelize = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
 
-const sequelize = new Sequelize('database', 'username', 'password', {
-	host: 'localhost',
-	dialect: 'mysql',
-	logging: console.log,
-});
-
 // Get All Orders for a User
 const getOrders = asyncHandler(async (req, res) => {
-	const orders = await Order.findAll({
-		where: { userId: req.user.userId },
+	const { type, limit, page, sort } = req.query;
+
+	const orderType = type || null;
+	const resultsPerPage = Number(limit) || 10;
+	const currentPage = Number(page) || 1;
+	const sorting = sort || 'createdAt';
+
+	const offset = (currentPage - 1) * resultsPerPage;
+
+	let whereClause = { userId: req.user.userId };
+	if (orderType) {
+		whereClause.orderType = orderType;
+	}
+
+	const { count: totalOrders, rows: orders } = await Order.findAndCountAll({
+		where: whereClause,
 		include: [{ model: Product, as: 'product', attributes: ['productName'] }],
+		limit: resultsPerPage,
+		offset: offset,
+		order: [[sorting, 'ASC']],
 	});
-	res.status(200).json(orders);
+
+	const totalPages = Math.ceil(totalOrders / resultsPerPage);
+
+	res.status(200).json({ orders, totalPages });
 });
 
 // Get Orders by Product
@@ -196,42 +210,10 @@ const deleteOrder = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: 'Order deleted' });
 });
 
-const getOrderData = asyncHandler(async (req, res) => {
-	const { type, startDate, endDate } = req.query;
-
-	if (!type || !startDate || !endDate) {
-		return res.status(400).json({
-			message: 'Missing required query parameters: type, startDate, endDate',
-		});
-	} else {
-		const whereClause = {
-			orderType: type,
-			orderDate: {
-				[Op.between]: [new Date(startDate), new Date(endDate)],
-			},
-		};
-
-		const chartData = await Order.findAll({
-			// include: [{ model: Product, as: 'product', attributes: ['productName'] }],
-			attributes: [
-				[Sequelize.fn('date', Sequelize.col('orderDate')), 'date'],
-				[Sequelize.fn('sum', Sequelize.col('orderQuantity')), 'totalQuantity'],
-			],
-			where: whereClause,
-			group: [Sequelize.fn('date', Sequelize.col('orderDate'))],
-			order: [[Sequelize.fn('date', Sequelize.col('orderDate')), 'ASC']],
-			raw: true,
-		});
-
-		res.status(200).json(chartData);
-	}
-});
-
 module.exports = {
 	getOrders,
 	getOrder,
 	getOrdersByProduct,
-	getOrderData,
 	createOrder,
 	deleteOrder,
 };

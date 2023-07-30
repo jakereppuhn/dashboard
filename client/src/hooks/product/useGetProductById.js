@@ -14,7 +14,7 @@ export const useGetProductById = (productId) => {
 			setIsLoading(true);
 			try {
 				const { data } = await axios.get(
-					`http://localhost:3001/api/product/${productId}`,
+					`http://localhost:3001/api/v1/products/${productId}`,
 					{
 						headers: {
 							Authorization: `Bearer ${user.token}`,

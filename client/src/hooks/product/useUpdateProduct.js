@@ -10,7 +10,7 @@ export const useUpdateProduct = (productId) => {
 	return useMutation(
 		async ({ updatedData }) => {
 			const { data } = await axios.put(
-				`http://localhost:3001/api/product/${productId}`,
+				`http://localhost:3001/api/v1/products/${productId}`,
 				updatedData,
 				{
 					headers: {

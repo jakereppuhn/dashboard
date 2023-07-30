@@ -21,7 +21,7 @@ export const useCreateProduct = () => {
 		};
 
 		axios
-			.post('http://localhost:3001/api/product', data, {
+			.post('http://localhost:3001/api/v1/products', data, {
 				headers: {
 					Authorization: `Bearer ${user.token}`,
 				},

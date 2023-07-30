@@ -10,7 +10,7 @@ export const useGetOrderData = ({ startDate, endDate }) => {
 	useEffect(() => {
 		const fetchOrderData = async () => {
 			const response = await axios.get(
-				`http://localhost:3001/api/order/data?type=sale&startDate=${
+				`http://localhost:3001/api/v1/orders/stats?type=sale&startDate=${
 					startDate.toISOString().split('T')[0]
 				}&endDate=${endDate.toISOString().split('T')[0]}`,
 				{

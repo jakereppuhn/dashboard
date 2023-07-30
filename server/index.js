@@ -18,9 +18,9 @@ const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const orderRoutes = require('./routes/orderRoutes');
 
-app.use('/api/user', userRoutes);
-app.use('/api/product', productRoutes);
-app.use('/api/order', orderRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/api/v1/orders', orderRoutes);
 
 sequelize
 	.sync()

@@ -252,11 +252,18 @@ const OrderTable = () => {
 												<Link
 													to={`/orders/${order.orderId}`}
 													className="hover:underline">
-													{order.productId}
+													{order.product.productName}
 												</Link>
 											</th>
-											<td className="px-4 py-3 capitalize">
-												{order.orderType}
+											<td>
+												<h1
+													className={`w-20 text-center py-1 rounded capitalize text-white bg-opacity-75 ${
+														order.orderType === 'purchase'
+															? 'bg-orange-500'
+															: 'bg-primary'
+													}`}>
+													{order.orderType}
+												</h1>
 											</td>
 											<td className="px-4 py-3">{order.orderQuantity}</td>
 											<td className="px-4 py-3">{order.pricePerUnit}</td>

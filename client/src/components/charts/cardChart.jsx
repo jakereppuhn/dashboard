@@ -41,9 +41,6 @@ const CardChart = ({ data }) => {
 				max: maxValue,
 			},
 		},
-		onHover: (event, chartElement) => {
-			event.target.style.cursor = chartElement[0] ? 'pointer' : 'default';
-		},
 	};
 
 	const gradientPlugin = {

@@ -1,11 +1,14 @@
 const asyncHandler = require('express-async-handler');
-const { Order, Inventory, OrderMapping } = require('../models');
+const { Product, Order, Inventory, OrderMapping } = require('../models');
 const { Op } = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
 
 // Get All Orders for a User
 const getOrders = asyncHandler(async (req, res) => {
-	const orders = await Order.findAll({ where: { userId: req.user.userId } });
+	const orders = await Order.findAll({
+		where: { userId: req.user.userId },
+		include: [{ model: Product, as: 'product', attributes: ['productName'] }],
+	});
 	res.status(200).json(orders);
 });
 
@@ -13,6 +16,7 @@ const getOrders = asyncHandler(async (req, res) => {
 const getOrdersByProduct = asyncHandler(async (req, res) => {
 	const orders = await Order.findAll({
 		where: { productId: req.params.productId },
+		include: [{ model: Product, attributes: ['productName'] }],
 	});
 	res.status(200).json(orders);
 });

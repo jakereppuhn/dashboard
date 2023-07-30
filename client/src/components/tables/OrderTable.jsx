@@ -5,8 +5,9 @@ import { Link } from 'react-router-dom';
 const OrderTable = () => {
 	const { orders, refetch } = useGetAllOrders();
 
+	const productsPerPage = 10;
 	const [currentPage, setCurrentPage] = useState(1);
-	const totalPages = Math.ceil(orders.length / 10);
+	const totalPages = Math.ceil(orders.length / productsPerPage);
 
 	const handleClick = (newPage) => {
 		if (newPage < 1) newPage = 1;
@@ -146,30 +147,6 @@ const OrderTable = () => {
 										/>
 									</svg>
 								</button>
-								<div
-									id="filterDropdown"
-									className="z-10 hidden w-48 rounded-lg bg-white p-3 shadow dark:bg-gray-700">
-									<h6 className="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-										Choose brand
-									</h6>
-									<ul
-										className="space-y-2 text-sm"
-										aria-labelledby="filterDropdownButton">
-										<li className="flex items-center">
-											<input
-												id="apple"
-												type="checkbox"
-												value=""
-												className="h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-600 focus:ring-2 focus:ring-primary-500 dark:border-gray-500 dark:bg-gray-600 dark:ring-offset-gray-700 dark:focus:ring-primary-600"
-											/>
-											<label
-												htmlFor="apple"
-												className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">
-												Apple (56)
-											</label>
-										</li>
-									</ul>
-								</div>
 							</div>
 							<button
 								type="button"
@@ -194,7 +171,7 @@ const OrderTable = () => {
 					</div>
 
 					<div className="overflow-x-auto">
-						<table className="h-full w-full text-left text-sm text-gray-500 dark:text-gray-400">
+						<table className="h-full w-full text-center text-sm text-gray-500 dark:text-gray-400">
 							<thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
 								<tr>
 									<th scope="col" className="p-4">
@@ -219,7 +196,7 @@ const OrderTable = () => {
 										Quantity
 									</th>
 									<th scope="col" className="px-4 py-3">
-										Cost per unit
+										Price
 									</th>
 									<th scope="col" className="px-4 py-3">
 										Date
@@ -257,10 +234,10 @@ const OrderTable = () => {
 											</th>
 											<td>
 												<h1
-													className={`w-20 text-center py-1 rounded capitalize text-white bg-opacity-75 ${
+													className={`w-20 text-center py-0.5 rounded capitalize text-white ${
 														order.orderType === 'purchase'
-															? 'bg-orange-500'
-															: 'bg-primary'
+															? 'bg-red-100 border border-red-400 text-red-700'
+															: 'bg-green-100 border border-green-400 text-green-700'
 													}`}>
 													{order.orderType}
 												</h1>
@@ -311,26 +288,16 @@ const OrderTable = () => {
 								))}
 							</tbody>
 						</table>
-						{/* {isAddModalOpen && (
-							<AddProduct onCloseAdd={toggleAddModal} refetch={refetch} />
-						)}
-						{isDeleteModalOpen && (
-							<DeleteProduct
-								product={productToDelete}
-								onCloseDelete={toggleDeleteModal}
-								refetch={refetch}
-							/>
-						)} */}
 					</div>
 					<nav className="flex flex-col items-start justify-between space-y-3 p-4 md:flex-row md:items-center md:space-y-0">
 						<span className="flex gap-2 text-sm font-normal text-gray-500 dark:text-gray-400">
 							Showing
-							{/* <span className="font-semibold text-gray-900 dark:text-white">
+							<span className="font-semibold text-gray-900 dark:text-white">
 								{(currentPage - 1) * productsPerPage + 1} -{' '}
-								{currentPage * productsPerPage > products.length
-									? products.length
+								{currentPage * productsPerPage > orders.length
+									? orders.length
 									: currentPage * productsPerPage}
-							</span> */}
+							</span>
 							of
 							<span className="font-semibold text-gray-900 dark:text-white">
 								{orders.length}

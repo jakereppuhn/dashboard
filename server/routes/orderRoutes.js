@@ -5,6 +5,7 @@ const {
 	getOrders,
 	getOrdersByProduct,
 	getOrder,
+	getOrderData,
 } = require('../controllers/orderController.js');
 const { protect } = require('../middleware/authMiddleware.js');
 
@@ -12,12 +13,14 @@ const router = express.Router();
 
 router.get('/', protect, getOrders);
 
-router.get('/:productId', protect, getOrdersByProduct);
+router.get('/data', protect, getOrderData);
 
-router.get('/:orderId', protect, getOrder);
+router.get('/:productId', protect, getOrdersByProduct);
 
 router.post('/:productId', protect, createOrder);
 
 router.delete('/:orderId', protect, deleteOrder);
+
+router.get('/:orderId', protect, getOrder);
 
 module.exports = router;

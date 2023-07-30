@@ -1,7 +1,14 @@
 const asyncHandler = require('express-async-handler');
 const { Product, Order, Inventory, OrderMapping } = require('../models');
 const { Op } = require('sequelize');
+const Sequelize = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
+
+const sequelize = new Sequelize('database', 'username', 'password', {
+	host: 'localhost',
+	dialect: 'mysql',
+	logging: console.log,
+});
 
 // Get All Orders for a User
 const getOrders = asyncHandler(async (req, res) => {
@@ -16,7 +23,6 @@ const getOrders = asyncHandler(async (req, res) => {
 const getOrdersByProduct = asyncHandler(async (req, res) => {
 	const orders = await Order.findAll({
 		where: { productId: req.params.productId },
-		include: [{ model: Product, attributes: ['productName'] }],
 	});
 	res.status(200).json(orders);
 });
@@ -190,10 +196,42 @@ const deleteOrder = asyncHandler(async (req, res) => {
 	res.status(200).json({ message: 'Order deleted' });
 });
 
+const getOrderData = asyncHandler(async (req, res) => {
+	const { type, startDate, endDate } = req.query;
+
+	if (!type || !startDate || !endDate) {
+		return res.status(400).json({
+			message: 'Missing required query parameters: type, startDate, endDate',
+		});
+	} else {
+		const whereClause = {
+			orderType: type,
+			orderDate: {
+				[Op.between]: [new Date(startDate), new Date(endDate)],
+			},
+		};
+
+		const chartData = await Order.findAll({
+			// include: [{ model: Product, as: 'product', attributes: ['productName'] }],
+			attributes: [
+				[Sequelize.fn('date', Sequelize.col('orderDate')), 'date'],
+				[Sequelize.fn('sum', Sequelize.col('orderQuantity')), 'totalQuantity'],
+			],
+			where: whereClause,
+			group: [Sequelize.fn('date', Sequelize.col('orderDate'))],
+			order: [[Sequelize.fn('date', Sequelize.col('orderDate')), 'ASC']],
+			raw: true,
+		});
+
+		res.status(200).json(chartData);
+	}
+});
+
 module.exports = {
 	getOrders,
 	getOrder,
 	getOrdersByProduct,
+	getOrderData,
 	createOrder,
 	deleteOrder,
 };

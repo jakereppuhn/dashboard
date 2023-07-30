@@ -9,9 +9,6 @@ const DatePicker = ({ setDateRange }) => {
 
 	const [monthDays, setMonthDays] = useState([]);
 
-	const [startDate, setStartDate] = useState(null);
-	const [endDate, setEndDate] = useState(null);
-
 	const datePickerRef = useRef(null);
 
 	const filterOptions = [
@@ -62,6 +59,13 @@ const DatePicker = ({ setDateRange }) => {
 		const lastDay = new Date(year, month + 1, 0);
 		return lastDay;
 	};
+
+	const [startDate, setStartDate] = useState(
+		getFirstDayOfMonth(new Date().getFullYear(), new Date().getMonth())
+	);
+	const [endDate, setEndDate] = useState(
+		getLastDayOfMonth(new Date().getFullYear(), new Date().getMonth())
+	);
 
 	const getDaysArrayForMonth = (year, month) => {
 		const firstDay = getFirstDayOfMonth(year, month);
@@ -350,7 +354,7 @@ const DatePicker = ({ setDateRange }) => {
 															} ${
 																isDateSelected(date) &&
 																'bg-primary  text-white rounded-lg'
-															} 
+															} ${isDateInRange(date) && 'text-white'}
 														
 													}`}>
 															{date.getDate()}

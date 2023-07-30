@@ -1,28 +1,28 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuthContext } from '../user/useAuthContext';
 
-export const useGetOrderData = (dateRange) => {
+export const useGetOrderData = ({ startDate, endDate }) => {
 	const [data, setData] = useState(null);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+
+	const { user } = useAuthContext();
 
 	useEffect(() => {
 		const fetchOrderData = async () => {
-			try {
-				const response = await axios.get(
-					`http://localhost:3001/api/order/data?type=sale&startDate=${
-						dateRange.startDate.toISOString().split('T')[0]
-					}&endDate=${dateRange.endDate.toISOString().split('T')[0]}`
-				);
-				setData(response.data);
-				setLoading(false);
-			} catch (error) {
-				setError(error);
-				setLoading(false);
-			}
+			const response = await axios.get(
+				`http://localhost:3001/api/order/data?type=sale&startDate=${
+					startDate.toISOString().split('T')[0]
+				}&endDate=${endDate.toISOString().split('T')[0]}`,
+				{
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				}
+			);
+			setData(response.data);
 		};
 		fetchOrderData();
-	}, [dateRange]);
+	}, [startDate, endDate]);
 
-	return { data, loading, error };
+	return { data };
 };

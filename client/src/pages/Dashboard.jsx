@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Layout } from '../components';
+import { Dropdown, Layout } from '../components';
 import BarChart from '../components/charts/BarChart';
 import CardChart from '../components/charts/CardChart';
 import DatePicker from '../components/DatePicker';
@@ -89,11 +89,11 @@ const Dashboard = () => {
 	return (
 		<Layout>
 			<div className="px-8 py-4 flex flex-col h-full">
-				<div className="w-full flex justify-between">
+				<div className="w-full flex justify-between z-50 mb-4">
 					<h1 className="text-2xl font-bold dark:text-white flex items-center">
 						Dashboard
 					</h1>
-					<DatePicker dateRange={dateRange} setDateRange={setDateRange} />
+					<Dropdown setDateRange={setDateRange} />
 				</div>
 
 				<div className="flex flex-wrap -ml-2 -mr-2 mb-4">

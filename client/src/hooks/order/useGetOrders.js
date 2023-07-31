@@ -4,7 +4,7 @@ import { useAuthContext } from '../user/useAuthContext';
 
 export const useGetOrders = (
 	page = 1,
-	limit = 10,
+	limit = 50,
 	type = null,
 	sort = 'createdAt'
 ) => {

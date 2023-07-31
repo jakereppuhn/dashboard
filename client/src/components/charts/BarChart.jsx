@@ -73,6 +73,7 @@ const BarChart = ({ dateRange }) => {
 	}, [orderData, isLoading, error, startDate, endDate]);
 
 	const options = {
+		maintainAspectRatio: false,
 		responsive: true,
 		legend: {
 			display: true,
@@ -91,7 +92,9 @@ const BarChart = ({ dateRange }) => {
 	};
 
 	return !isLoading && chartData ? (
-		<Bar data={chartData} options={options} />
+		<div className="absolute inset-0 p-4">
+			<Bar data={chartData} options={options} />
+		</div>
 	) : null;
 };
 

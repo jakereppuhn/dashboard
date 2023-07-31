@@ -106,7 +106,7 @@ const Dashboard = () => {
 									<h4 className="text-sm text-gray-500 dark:text-gray-400">
 										{card.title}
 									</h4>
-									<p className="text-3xl font-bold dark:text-white">
+									<p className="text-2xl font-bold dark:text-white">
 										{card.value}
 									</p>
 								</div>
@@ -114,29 +114,33 @@ const Dashboard = () => {
 									+ 5.00%
 								</div>
 							</div>
-							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded-lg w-full overflow-hidden h-36 border border-gray-600">
+							<div className="pt-4 text-center bg-white dark:bg-gray-800 rounded-lg w-full overflow-hidden h-28 border border-gray-600">
 								<CardChart data={card.data} text={'Total Revenue'} />
 							</div>
 						</div>
 					))}
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-8 gap-4 text-white flex-grow">
-					<div className="flex-col lg:col-span-5 flex">
-						<div className="flex-grow bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+				<div className="grid grid-rows-2 h-screen gap-4 text-white">
+					<div className="grid grid-cols-3 h-full gap-4">
+						<div className="col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border relative h-full">
 							<BarChart dateRange={dateRange} />
 						</div>
-						<div className="h-28 w-full bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto flex flex-col dark:border-gray-600 border mt-4">
-							{/* your content */}
+
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+							Date Picker
 						</div>
 					</div>
 
-					<div className="lg:col-span-3 grid grid-rows-2 gap-4 h-full">
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto flex flex-col dark:border-gray-600 border">
+					<div className="grid grid-cols-3 h-full gap-4">
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
 							Recent Orders
 						</div>
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto flex flex-col dark:border-gray-600 border">
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
 							Recent Transactions
+						</div>
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+							{/* add another box here if needed */}
 						</div>
 					</div>
 				</div>

@@ -1,7 +1,6 @@
 const asyncHandler = require('express-async-handler');
-const { Order } = require('../models');
+const { Order, OrderMapping } = require('../models');
 const { Op } = require('sequelize');
-
 const Sequelize = require('sequelize');
 
 const getOrderData = asyncHandler(async (req, res) => {
@@ -27,11 +26,41 @@ const getOrderData = asyncHandler(async (req, res) => {
 						Sequelize.fn('sum', Sequelize.col('orderQuantity')),
 						'totalQuantity',
 					],
+					[
+						Sequelize.fn(
+							'sum',
+							Sequelize.literal('orderQuantity * pricePerUnit')
+						),
+						'revenue',
+					],
+					[
+						Sequelize.literal(`(
+								SELECT SUM(quantityFromPurchase * purchaseCostPerUnit) 
+								FROM OrderMappings
+								WHERE OrderMappings.saleOrderId = Order.orderId
+						)`),
+						'cogs',
+					],
+					[
+						Sequelize.literal(`(
+								SELECT SUM((pricePerUnit * orderQuantity) - (quantityFromPurchase * purchaseCostPerUnit))
+								FROM OrderMappings
+								WHERE OrderMappings.saleOrderId = Order.orderId
+						)`),
+						'profit',
+					],
+					[Sequelize.fn('count', Sequelize.col('orderId')), 'orderCount'],
 				],
 				where: whereClause,
 				group: [Sequelize.fn('date', Sequelize.col('orderDate'))],
 				order: [[Sequelize.fn('date', Sequelize.col('orderDate')), 'ASC']],
 				raw: true,
+			});
+
+			chartData.forEach((data) => {
+				data['profit'] = data['revenue'] - data['cogs'];
+				data['margin'] = data['profit'] / data['revenue'];
+				data['avgOrderValue'] = data['revenue'] / data['orderCount'];
 			});
 
 			return res.status(200).json(chartData);

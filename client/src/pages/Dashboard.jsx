@@ -93,7 +93,26 @@ const Dashboard = () => {
 					<h1 className="text-2xl font-bold dark:text-white flex items-center">
 						Dashboard
 					</h1>
-					<Dropdown setDateRange={setDateRange} />
+					{/* <Dropdown setDateRange={setDateRange} /> */}
+					<button
+						type="button"
+						className="flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-800  dark:bg-primary-600 dark:hover:bg-primary-700 gap-2">
+						<svg
+							fill="none"
+							stroke="currentColor"
+							strokeWidth={1.5}
+							viewBox="0 0 24 24"
+							xmlns="http://www.w3.org/2000/svg"
+							aria-hidden="true"
+							className="h-5 w-5">
+							<path
+								strokeLinecap="round"
+								strokeLinejoin="round"
+								d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+							/>
+						</svg>
+						Download Reports
+					</button>
 				</div>
 
 				<div className="flex flex-wrap -ml-2 -mr-2 mb-4">
@@ -121,26 +140,31 @@ const Dashboard = () => {
 					))}
 				</div>
 
-				<div className="grid grid-rows-2 h-screen gap-4 text-white">
-					<div className="grid grid-cols-3 h-full gap-4">
-						<div className="col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border relative h-full">
+				<div className="flex flex-col h-screen gap-4 text-white">
+					<div className="flex flex-row h-3/5 gap-4">
+						<div className="flex-grow bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border relative h-full">
 							<BarChart dateRange={dateRange} />
 						</div>
 
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
-							Date Picker
+						<div className="bg-white dark:bg-gray-800 rounded-lg overflow-auto dark:border-gray-600 border w-1/3 py-4">
+							<DatePicker />
 						</div>
 					</div>
 
-					<div className="grid grid-cols-3 h-full gap-4">
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+					<div className="flex flex-row gap-4 flex-auto">
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
 							Recent Orders
 						</div>
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
 							Recent Transactions
 						</div>
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
-							{/* add another box here if needed */}
+						<div className="flex flex-col gap-4 w-1/3">
+							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
+								Orders by Platform
+							</div>
+							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
+								{/* add another box here if needed */}
+							</div>
 						</div>
 					</div>
 				</div>

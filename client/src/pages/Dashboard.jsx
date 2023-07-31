@@ -88,7 +88,7 @@ const Dashboard = () => {
 
 	return (
 		<Layout>
-			<div className="px-8 py-4 flex flex-col h-full">
+			<div className="py-4 px-8 flex flex-col h-full">
 				<div className="w-full flex justify-between z-50 mb-4">
 					<h1 className="text-2xl font-bold dark:text-white flex items-center">
 						Dashboard
@@ -141,30 +141,31 @@ const Dashboard = () => {
 				</div>
 
 				<div className="flex flex-col h-screen gap-4 text-white">
-					<div className="flex flex-row h-3/5 gap-4">
-						<div className="flex-grow bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border relative h-full">
+					<div className="grid grid-cols-3 gap-4 h-3/5">
+						<div className="flex-grow bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border relative h-full col-span-2">
 							<BarChart dateRange={dateRange} />
 						</div>
 
-						<div className="bg-white dark:bg-gray-800 rounded-lg overflow-auto dark:border-gray-600 border w-1/3 py-4">
+						<div className="bg-white dark:bg-gray-800 rounded-lg overflow-auto dark:border-gray-600 border py-4">
 							<DatePicker />
 						</div>
 					</div>
 
-					<div className="flex flex-row gap-4 flex-auto">
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
-							Recent Orders
-						</div>
-						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
-							Recent Transactions
-						</div>
-						<div className="flex flex-col gap-4 w-1/3">
+					<div className="grid grid-cols-3 flex-auto gap-4">
+						<div className="flex flex-col gap-4">
 							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
 								Orders by Platform
 							</div>
 							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
 								{/* add another box here if needed */}
 							</div>
+						</div>
+
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+							Recent Orders
+						</div>
+						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+							Recent Orders
 						</div>
 					</div>
 				</div>

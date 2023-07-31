@@ -160,22 +160,8 @@ const DatePicker = ({ setDateRange }) => {
 	}, [rangeFilter]);
 
 	return (
-		<div className="flex justify-center h-full">
-			{/* <div className="flex flex-col gap-6 px-6">
-				<div className="flex flex-col">
-					<label htmlFor="">Date</label>
-					<Dropdown />
-				</div>
-				<div className="flex flex-col">
-					<label htmlFor="">Category</label>
-					<Dropdown />
-				</div>
-				<div className="flex flex-col">
-					<label htmlFor="">Product</label>
-					<Dropdown />
-				</div>
-			</div> */}
-			<div className="flex flex-col justify-between px-6">
+		<div className="flex justify-between h-full">
+			<div className="flex flex-col justify-between px-10 py-4">
 				<div className="flex flex-col">
 					<div className="flex items-center justify-between">
 						<div className="flex gap-1">
@@ -321,21 +307,28 @@ const DatePicker = ({ setDateRange }) => {
 						))}
 					</div>
 				</div>
-				<div className="flex items-center justify-end">
-					<div className="flex items-center space-x-4">
+				{/* <div className="flex items-center justify-end">
+					<div className="flex items-center">
 						<button
-							className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
-							type="button">
-							Clear
-						</button>
-						<button
-							className="flex w-full items-center justify-center rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700 focus:z-10 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white dark:focus:ring-gray-700 md:w-auto"
+							className="flex w-full items-center justify-center rounded-lg bg-white px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 hover:text-primary-700  dark:bg-primary dark:text-white dark:hover:bg-gray-700 dark:hover:text-white  md:w-auto"
 							type="button">
 							Apply
 						</button>
 					</div>
-				</div>
+				</div> */}
 			</div>
+			<div className="border-l border-gray-600"></div>
+			<ul className="hidden lg:flex flex-col text-sm flex-auto px-2 py-4">
+				{filterOptions.map((option) => (
+					<li key={option}>
+						<button
+							onClick={() => handleFilterOptions(option)}
+							className="px-6 py-2 w-full rounded-lg hover:bg-gray-50 hover:text-primary text-left dark:hover:bg-gray-900 dark:hover:text-gray-400">
+							{option}
+						</button>
+					</li>
+				))}
+			</ul>
 		</div>
 	);
 };

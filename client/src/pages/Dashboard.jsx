@@ -153,8 +153,16 @@ const Dashboard = () => {
 
 					<div className="grid grid-cols-3 flex-auto gap-4">
 						<div className="flex flex-col gap-4">
-							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
-								Orders by Platform
+							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto flex flex-col justify-between">
+								<h1 className="text-md text-gray-500 dark:text-gray-400">
+									Orders by Platform
+								</h1>
+								<div className="w-full h-8 bg-gray-900 rounded-full overflow-hidden flex">
+									<div className="w-full h-full bg-blue-400"></div>
+									<div className="w-5/6 h-full bg-purple-400"></div>
+									<div className="w-2/3 h-full bg-orange-400"></div>
+									<div className="w-3/5 h-full bg-green-400"></div>
+								</div>
 							</div>
 							<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border flex-auto">
 								{/* add another box here if needed */}

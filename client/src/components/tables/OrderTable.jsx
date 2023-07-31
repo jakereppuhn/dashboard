@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const OrderTable = () => {
 	const productsPerPage = 12;
 	const [currentPage, setCurrentPage] = useState(1);
-	const { orders, totalPages, refetch } = useGetOrders(
+	const { orders, totalPages, total, refetch } = useGetOrders(
 		currentPage,
 		productsPerPage
 	);
@@ -187,23 +187,14 @@ const OrderTable = () => {
 												</td>
 												<th
 													scope="row"
-													className="whitespace-nowrap px-4 py-3 font-medium text-gray-900 dark:text-white">
+													className="whitespace-nowrap px-4 py-3 font-medium ">
 													<Link
 														to={`/orders/${order.orderId}`}
 														className="hover:underline">
 														{order.product.productName}
 													</Link>
 												</th>
-												<td>
-													<h1
-														className={`w-20 text-center py-0.5 rounded capitalize text-white ${
-															order.orderType === 'purchase'
-																? 'bg-red-100 border border-red-400 text-red-700'
-																: 'bg-green-100 border border-green-400 text-green-700'
-														}`}>
-														{order.orderType}
-													</h1>
-												</td>
+												<td className="capitalize">{order.orderType}</td>
 												<td className="px-4 py-3">{order.orderQuantity}</td>
 												<td className="px-4 py-3">{order.pricePerUnit}</td>
 												<td className="px-4 py-3">
@@ -233,13 +224,13 @@ const OrderTable = () => {
 							Showing
 							<span className="font-semibold text-gray-900 dark:text-white">
 								{(currentPage - 1) * productsPerPage + 1} -{' '}
-								{currentPage * productsPerPage > orders.length
-									? orders.length
+								{currentPage * productsPerPage > total
+									? total
 									: currentPage * productsPerPage}
 							</span>
 							of
 							<span className="font-semibold text-gray-900 dark:text-white">
-								{orders.length}
+								{total}
 							</span>
 						</span>
 

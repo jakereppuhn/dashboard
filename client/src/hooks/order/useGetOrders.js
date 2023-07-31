@@ -12,6 +12,7 @@ export const useGetOrders = (
 	const [error, setError] = useState(null);
 	const [isLoading, setIsLoading] = useState(false);
 	const [totalPages, setTotalPages] = useState(0);
+	const [total, setTotal] = useState(0);
 
 	const { user } = useAuthContext();
 
@@ -30,8 +31,9 @@ export const useGetOrders = (
 				},
 			});
 
-			setOrders(data.orders);
+			setOrders(data.data);
 			setTotalPages(data.totalPages);
+			setTotal(data.total);
 		} catch (err) {
 			setError(err);
 		} finally {
@@ -43,5 +45,5 @@ export const useGetOrders = (
 		fetchOrders();
 	}, [fetchOrders]);
 
-	return { orders, error, isLoading, totalPages, refetch: fetchOrders };
+	return { orders, error, isLoading, totalPages, total, refetch: fetchOrders };
 };

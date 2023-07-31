@@ -6,31 +6,44 @@ var SnowflakeId = require('snowflake-id').default;
 
 // Get All Orders for a User
 const getOrders = asyncHandler(async (req, res) => {
-	const { type, limit, page, sort } = req.query;
+	const { limit = 10, page = 1, type, startDate, endDate } = req.query;
+	const whereClause = {};
 
-	const orderType = type || null;
-	const resultsPerPage = Number(limit) || 10;
-	const currentPage = Number(page) || 1;
-	const sorting = sort || 'createdAt';
+	const currentPage = parseInt(page);
 
-	const offset = (currentPage - 1) * resultsPerPage;
-
-	let whereClause = { userId: req.user.userId };
-	if (orderType) {
-		whereClause.orderType = orderType;
+	if (type) {
+		whereClause.orderType = type;
 	}
 
-	const { count: totalOrders, rows: orders } = await Order.findAndCountAll({
-		where: whereClause,
-		include: [{ model: Product, as: 'product', attributes: ['productName'] }],
-		limit: resultsPerPage,
-		offset: offset,
-		order: [[sorting, 'ASC']],
-	});
+	if (startDate && endDate) {
+		whereClause.orderDate = {
+			[Op.between]: [new Date(startDate), new Date(endDate)],
+		};
+	}
 
-	const totalPages = Math.ceil(totalOrders / resultsPerPage);
+	const offset = (currentPage - 1) * limit;
 
-	res.status(200).json({ orders, totalPages });
+	try {
+		const orders = await Order.findAll({
+			where: whereClause,
+			include: [{ model: Product, as: 'product', attributes: ['productName'] }],
+			limit: parseInt(limit),
+			offset: offset,
+		});
+
+		const totalOrders = await Order.count({ where: whereClause });
+
+		const pageCount = Math.ceil(totalOrders / limit);
+
+		return res
+			.status(200)
+			.json({ data: orders, total: totalOrders, totalPages: pageCount });
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'An error occurred while retrieving order data' });
+	}
 });
 
 // Get Orders by Product

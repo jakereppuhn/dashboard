@@ -122,9 +122,15 @@ const Dashboard = () => {
 				</div>
 
 				<div className="grid grid-cols-1 lg:grid-cols-8 gap-4 text-white flex-grow">
-					<div className="bg-white dark:bg-gray-800 p-6 lg:col-span-5 rounded-lg overflow-auto flex flex-col dark:border-gray-600 border">
-						<BarChart dateRange={dateRange} className="flex-grow" />
+					<div className="flex-col lg:col-span-5 flex">
+						<div className="flex-grow bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto dark:border-gray-600 border">
+							<BarChart dateRange={dateRange} />
+						</div>
+						<div className="h-28 w-full bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto flex flex-col dark:border-gray-600 border mt-4">
+							{/* your content */}
+						</div>
 					</div>
+
 					<div className="lg:col-span-3 grid grid-rows-2 gap-4 h-full">
 						<div className="bg-white dark:bg-gray-800 p-6 rounded-lg overflow-auto flex flex-col dark:border-gray-600 border">
 							Recent Orders

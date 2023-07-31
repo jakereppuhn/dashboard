@@ -132,7 +132,7 @@ const OrderTable = () => {
 							</div>
 						</div>
 
-						<div className="overflow-x-auto">
+						<div className="overflow-auto">
 							<table className="h-full w-full text-center text-sm text-gray-500 dark:text-gray-400">
 								<thead className="bg-gray-50 text-xs uppercase text-gray-700 dark:bg-gray-700 dark:text-gray-400">
 									<tr>
@@ -258,11 +258,11 @@ const OrderTable = () => {
 								<li key={num}>
 									<button
 										onClick={() => handleClick(num + 1)}
-										className={`flex items-center justify-center border border-gray-300 bg-white px-3 py-2 text-sm leading-tight ${
+										className={`flex items-center justify-center border border-gray-300  px-3 py-2 text-sm leading-tight ${
 											currentPage === num + 1
-												? 'text-primary-600 bg-primary-50'
-												: 'text-gray-500'
-										} hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white`}>
+												? 'bg-gray-700 text-white'
+												: 'text-gray-400 bg-white dark:bg-gray-800'
+										} hover:bg-gray-100 hover:text-gray-700 dark:border-gray-700  dark:hover:bg-gray-700 dark:hover:text-white`}>
 										{num + 1}
 									</button>
 								</li>

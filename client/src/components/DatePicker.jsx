@@ -60,12 +60,8 @@ const DatePicker = ({ setDateRange }) => {
 		return lastDay;
 	};
 
-	const [startDate, setStartDate] = useState(
-		getFirstDayOfMonth(new Date().getFullYear(), new Date().getMonth())
-	);
-	const [endDate, setEndDate] = useState(
-		getLastDayOfMonth(new Date().getFullYear(), new Date().getMonth())
-	);
+	const [startDate, setStartDate] = useState();
+	const [endDate, setEndDate] = useState();
 
 	const getDaysArrayForMonth = (year, month) => {
 		const firstDay = getFirstDayOfMonth(year, month);
@@ -158,9 +154,7 @@ const DatePicker = ({ setDateRange }) => {
 		}
 	};
 
-	useEffect(() => {
-		console.log(startDate, endDate);
-	}, [startDate, endDate]);
+	useEffect(() => {}, [startDate, endDate]);
 
 	useEffect(() => {
 		const daysArray = getDaysArrayForMonth(selectedYear, selectedMonth - 1);

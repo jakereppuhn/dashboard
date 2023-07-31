@@ -1,13 +1,11 @@
 import { useState } from 'react';
 import { Layout } from '../components';
-import BarChart from '../components/charts/barChart';
+import BarChart from '../components/charts/BarChart';
 import CardChart from '../components/charts/CardChart';
 import DatePicker from '../components/DatePicker';
 
 const Dashboard = () => {
 	const [dateRange, setDateRange] = useState(null);
-
-	console.log(dateRange);
 
 	const totalRevenue = {
 		labels: [1, 2, 3, 4, 5, 6, 7],

@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const { Order } = require('../models');
 const { Op } = require('sequelize');
+
 const Sequelize = require('sequelize');
 
 const getOrderData = asyncHandler(async (req, res) => {

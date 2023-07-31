@@ -29,6 +29,7 @@ const getOrders = asyncHandler(async (req, res) => {
 			include: [{ model: Product, as: 'product', attributes: ['productName'] }],
 			limit: parseInt(limit),
 			offset: offset,
+			order: [['orderDate', 'DESC']],
 		});
 
 		const totalOrders = await Order.count({ where: whereClause });

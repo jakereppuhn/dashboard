@@ -1,5 +1,5 @@
 const asyncHandler = require('express-async-handler');
-const { Product } = require('../models');
+const { Product, Inventory } = require('../models');
 var SnowflakeId = require('snowflake-id').default;
 
 const getProductById = asyncHandler(async (req, res) => {
@@ -7,6 +7,7 @@ const getProductById = asyncHandler(async (req, res) => {
 
 	const product = await Product.findOne({
 		where: { productId: productId },
+		include: [{ model: Inventory, as: 'inventory', attributes: ['quantity'] }],
 	});
 
 	if (product) {
@@ -21,65 +22,48 @@ const getProducts = asyncHandler(async (req, res) => {
 	const { archived, limit = 50, page = 1 } = req.query;
 	const whereClause = {};
 
-	console.log(archived);
-
 	if (archived) {
 		whereClause.isArchived = archived === 'true';
 	}
 
-	try {
-		const offset = (page - 1) * limit;
+	const offset = (page - 1) * limit;
+	const products = await Product.findAll({
+		where: whereClause,
+		include: [{ model: Inventory, as: 'inventory', attributes: ['quantity'] }],
+		limit: parseInt(limit, 10),
+		offset: offset,
+	});
 
-		const products = await Product.findAll({
-			where: whereClause,
-			limit: parseInt(limit, 10),
-			offset: offset,
-		});
-
-		return res.status(200).json(products);
-	} catch (error) {
-		console.error(error);
-		return res
-			.status(500)
-			.json({ message: 'An error occurred while retrieving order data' });
-	}
+	return res.status(200).json(products);
 });
 
 const createProduct = asyncHandler(async (req, res) => {
 	const { name, description, type, attributes } = req.body;
 
 	if (!name) {
-		res.status(400);
-		throw new Error('Product name is required');
+		return res.status(400).json({ message: 'Product name is required' });
 	}
 
 	if (!type) {
-		res.status(400);
-		throw new Error('Product type is required');
+		return res.status(400).json({ message: 'Product type is required' });
 	}
 
 	var snowflake = new SnowflakeId({
 		mid: 42,
 		offset: (2019 - 1970) * 31536000 * 1000,
 	});
-	try {
-		const product = await Product.create({
-			productId: snowflake.generate(),
-			userId: req.user.userId,
-			name,
-			description,
-			type: type,
-			attributes: attributes || {},
-			isArchived: false,
-		});
 
-		return res.status(200).json(product);
-	} catch (error) {
-		console.error(error);
-		return res
-			.status(500)
-			.json({ message: 'An error occurred while retrieving order data' });
-	}
+	const product = await Product.create({
+		productId: snowflake.generate(),
+		userId: req.user.userId,
+		name,
+		description,
+		type: type,
+		attributes: attributes || {},
+		isArchived: false,
+	});
+
+	return res.status(200).json(product);
 });
 
 const updateProduct = asyncHandler(async (req, res) => {
@@ -109,8 +93,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 	const product = await Product.findOne({ where: { productId: productId } });
 
 	if (!product) {
-		res.status(404);
-		throw new Error('Product not found');
+		res.status(404).json({ message: 'Product not found' });
 	}
 
 	await product.destroy();

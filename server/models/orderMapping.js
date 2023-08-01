@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 	const OrderMapping = sequelize.define('OrderMapping', {
-		orderMappingId: {
+		id: {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 			primaryKey: true,

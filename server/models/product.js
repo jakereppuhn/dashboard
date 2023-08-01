@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 	const Product = sequelize.define('Product', {
-		productId: {
+		id: {
 			type: DataTypes.BIGINT,
 			allowNull: false,
 			primaryKey: true,
@@ -9,16 +9,16 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.BIGINT,
 			allowNull: true,
 		},
-		productName: {
+		name: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		productType: {
+		type: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			defaultValue: 'general',
 		},
-		productAttributes: {
+		attributes: {
 			type: DataTypes.JSON,
 			allowNull: false,
 			defaultValue: {},

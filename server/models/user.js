@@ -1,10 +1,9 @@
 module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define('User', {
 		userId: {
-			type: DataTypes.BIGINT,
+			type: DataTypes.STRING,
 			allowNull: false,
 			primaryKey: true,
-			autoIncrement: true,
 		},
 		firstName: {
 			type: DataTypes.STRING,
@@ -25,12 +24,6 @@ module.exports = (sequelize, DataTypes) => {
 		password: {
 			type: DataTypes.STRING,
 			allowNull: false,
-		},
-		accountType: {
-			type: DataTypes.ENUM,
-			values: ['admin', 'trial', 'monthly', 'lifetime'],
-			allowNull: false,
-			defaultValue: 'trial',
 		},
 	});
 

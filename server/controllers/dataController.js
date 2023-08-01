@@ -1,7 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const { Order, OrderMapping } = require('../models');
-const { Op } = require('sequelize');
-const Sequelize = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 
 const getOrderData = asyncHandler(async (req, res) => {
 	const { type, startDate, endDate } = req.query;
@@ -33,22 +32,6 @@ const getOrderData = asyncHandler(async (req, res) => {
 						),
 						'revenue',
 					],
-					[
-						Sequelize.literal(`(
-								SELECT SUM(quantityFromPurchase * purchaseCostPerUnit) 
-								FROM OrderMappings
-								WHERE OrderMappings.saleOrderId = Order.orderId
-						)`),
-						'cogs',
-					],
-					[
-						Sequelize.literal(`(
-								SELECT SUM((pricePerUnit * orderQuantity) - (quantityFromPurchase * purchaseCostPerUnit))
-								FROM OrderMappings
-								WHERE OrderMappings.saleOrderId = Order.orderId
-						)`),
-						'profit',
-					],
 					[Sequelize.fn('count', Sequelize.col('orderId')), 'orderCount'],
 				],
 				where: whereClause,
@@ -57,13 +40,34 @@ const getOrderData = asyncHandler(async (req, res) => {
 				raw: true,
 			});
 
-			chartData.forEach((data) => {
-				data['profit'] = data['revenue'] - data['cogs'];
-				data['margin'] = data['profit'] / data['revenue'];
-				data['avgOrderValue'] = data['revenue'] / data['orderCount'];
+			const cogsData = await Order.sequelize.query(
+				`SELECT date(orderDate) AS date, SUM(quantityFromPurchase * purchaseCostPerUnit) AS cogs 
+				FROM Orders 
+				INNER JOIN OrderMappings ON Orders.orderId = OrderMappings.saleOrderId 
+				WHERE Orders.orderType = :type AND Orders.orderDate BETWEEN :startDate AND :endDate 
+				GROUP BY date(orderDate)`,
+				{
+					replacements: {
+						type: type,
+						startDate: new Date(startDate),
+						endDate: new Date(endDate),
+					},
+					type: Order.sequelize.QueryTypes.SELECT,
+				}
+			);
+
+			const dataWithCogs = chartData.map((item) => {
+				const cogsItem = cogsData.find(
+					(cogsItem) => cogsItem.date === item.date
+				);
+				item.cogs = cogsItem ? cogsItem.cogs : 0;
+				item.profit = item.revenue - item.cogs;
+				item.margin = item.profit / item.revenue;
+				item.avgOrderValue = item.revenue / item.orderCount;
+				return item;
 			});
 
-			return res.status(200).json(chartData);
+			return res.status(200).json(dataWithCogs);
 		} catch (error) {
 			console.error(error);
 			return res

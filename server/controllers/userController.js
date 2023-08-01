@@ -54,7 +54,6 @@ const createUser = asyncHandler(async (req, res) => {
 			firstName: user.firstName,
 			lastName: user.lastName,
 			email: user.email,
-			accountType: user.accountType,
 		});
 	} else {
 		res.status(400);
@@ -95,7 +94,6 @@ const authUser = asyncHandler(async (req, res) => {
 			firstName: user.firstName,
 			lastName: user.lastName,
 			email: user.email,
-			accountType: user.accountType,
 		});
 	});
 });

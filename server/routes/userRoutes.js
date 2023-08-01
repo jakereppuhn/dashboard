@@ -7,6 +7,4 @@ router.post('/signup', createUser);
 
 router.post('/signin', authUser);
 
-// 
-
 module.exports = router;

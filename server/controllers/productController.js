@@ -6,8 +6,13 @@ var SnowflakeId = require('snowflake-id').default;
 const getProductById = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
 
+	if (!req.user) {
+		res.status(401);
+		throw new Error('Not authorized, no user found');
+	}
+
 	const product = await Product.findOne({
-		where: { productId: productId } && { isArchived: false },
+		where: { productId: productId },
 	});
 
 	if (product) {
@@ -18,18 +23,33 @@ const getProductById = asyncHandler(async (req, res) => {
 	}
 });
 
-// Get All Products
-const getAllProducts = asyncHandler(async (req, res) => {
-	const products = await Product.findAll({
-		where: { userId: req.user.userId } && { isArchived: false },
-	});
+// Get Products w/ query params
+const getProducts = asyncHandler(async (req, res) => {
+	const { archived } = req.query;
+
+	let products;
+
+	if (!req.user) {
+		res.status(401);
+		throw new Error('Not authorized, no user found');
+	}
+
+	if (archived) {
+		products = await Product.findAll({
+			where: { userId: req.user.userId } && { isArchived: archived },
+		});
+	} else {
+		products = await Product.findAll({
+			where: { userId: req.user.userId },
+		});
+	}
 
 	res.status(200).json(products);
 });
 
 // Create Product
 const createProduct = asyncHandler(async (req, res) => {
-	const { productName, productType, productAttributes, isArchived } = req.body;
+	const { name, description, type, attributes } = req.body;
 
 	if (!req.user) {
 		res.status(401);
@@ -37,12 +57,12 @@ const createProduct = asyncHandler(async (req, res) => {
 	}
 	const userId = req.user.userId;
 
-	if (!productName) {
+	if (!name) {
 		res.status(400);
 		throw new Error('Product name is required');
 	}
 
-	if (!productType) {
+	if (!type) {
 		res.status(400);
 		throw new Error('Product type is required');
 	}
@@ -55,9 +75,10 @@ const createProduct = asyncHandler(async (req, res) => {
 	const product = await Product.create({
 		productId: snowflake.generate(),
 		userId,
-		productName,
-		productType: productType || 'general',
-		productAttributes: productAttributes || {},
+		name,
+		description,
+		type: type || 'general',
+		attributes: attributes || {},
 		isArchived: isArchived || false,
 	});
 
@@ -65,9 +86,10 @@ const createProduct = asyncHandler(async (req, res) => {
 		res.json({
 			productId: product.productId,
 			userId: product.userId,
-			productName: product.productName,
-			productType: product.productType,
-			productAttributes: product.productAttributes,
+			name: product.name,
+			description: product.description,
+			type: product.type,
+			attributes: product.attributes,
 			isArchived: product.isArchived,
 		});
 	} else {
@@ -80,6 +102,11 @@ const createProduct = asyncHandler(async (req, res) => {
 const updateProduct = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
 	const { productName, productType, productAttributes, isArchived } = req.body;
+
+	if (!req.user) {
+		res.status(401);
+		throw new Error('Not authorized, no user found');
+	}
 
 	const product = await Product.findOne({ where: { productId: productId } });
 
@@ -117,7 +144,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 
 module.exports = {
 	getProductById,
-	getAllProducts,
+	getProducts,
 	createProduct,
 	updateProduct,
 	deleteProduct,

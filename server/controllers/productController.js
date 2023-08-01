@@ -62,30 +62,23 @@ const createProduct = asyncHandler(async (req, res) => {
 		mid: 42,
 		offset: (2019 - 1970) * 31536000 * 1000,
 	});
-
-	const product = await Product.create({
-		productId: snowflake.generate(),
-		userId: req.user.userId,
-		name,
-		description,
-		type: type,
-		attributes: attributes || {},
-		isArchived: false,
-	});
-
-	if (product) {
-		res.json({
-			productId: product.productId,
-			userId: product.userId,
-			name: product.name,
-			description: product.description,
-			type: product.type,
-			attributes: product.attributes,
-			isArchived: product.isArchived,
+	try {
+		const product = await Product.create({
+			productId: snowflake.generate(),
+			userId: req.user.userId,
+			name,
+			description,
+			type: type,
+			attributes: attributes || {},
+			isArchived: false,
 		});
-	} else {
-		res.status(400);
-		throw new Error('Invalid product data');
+
+		return res.status(200).json(product);
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'An error occurred while retrieving order data' });
 	}
 });
 

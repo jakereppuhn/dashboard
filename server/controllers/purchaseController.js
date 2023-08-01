@@ -1,12 +1,12 @@
 const asyncHandler = require('express-async-handler');
-const { Purchase, Inventory, OrderDetail } = require('../models');
+const { Purchase, Product, Inventory, OrderDetail } = require('../models');
 const { Op } = require('sequelize');
 const Sequelize = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
 
 // Get All Purchases for a User
 const getPurchases = asyncHandler(async (req, res) => {
-	const { on, from, to, limit, offset } = req.query;
+	const { on, from, to, limit = 50, page = 1 } = req.query;
 	const whereClause = {};
 
 	if (on && (from || to)) {
@@ -27,12 +27,13 @@ const getPurchases = asyncHandler(async (req, res) => {
 		};
 	}
 	try {
+		const offset = (page - 1) * limit;
+
 		const purchases = await Purchase.findAll({
 			where: whereClause,
 			include: [{ model: Product, as: 'product', attributes: ['name'] }],
-			limit: parseInt(limit),
+			limit: parseInt(limit, 10),
 			offset: offset,
-			order: [['createdAt', 'DESC']],
 		});
 		return res.status(200).json(purchases);
 	} catch (error) {
@@ -84,6 +85,7 @@ const getPurchase = asyncHandler(async (req, res) => {
 
 // Create Purchase
 const createPurchase = asyncHandler(async (req, res) => {
+	const { productId } = req.params;
 	const {
 		quantity,
 		purchaseDate,
@@ -92,15 +94,48 @@ const createPurchase = asyncHandler(async (req, res) => {
 		taxAmount,
 		otherFees,
 	} = req.body;
-	const productId = req.params.productId;
+
+	var snowflake = new SnowflakeId({
+		mid: 42,
+		offset: (2019 - 1970) * 31536000 * 1000,
+	});
 
 	if (!req.user) {
 		res.status(401);
 		throw new Error('Not authorized, no user found');
 	}
-	const userId = req.user.userId;
 
 	try {
+		const purchase = await Purchase.create({
+			purchaseId: snowflake.generate(),
+			userId: req.user.userId,
+			productId: productId,
+			quantity: quantity,
+			quantityRemaining: quantity,
+			purchaseDate: purchaseDate,
+			pricePerUnit: pricePerUnit,
+			totalCost: pricePerUnit * quantity,
+			shippingCost: shippingCost,
+			taxAmount: taxAmount,
+			otherFees: otherFees,
+			totalPurchaseCost:
+				pricePerUnit * quantity + shippingCost + taxAmount + otherFees,
+		});
+
+		const inventoryItem = await Inventory.findOne({ where: { productId } });
+
+		if (inventoryItem) {
+			inventoryItem.quantity += quantity;
+			await inventoryItem.save();
+		} else {
+			await Inventory.create({
+				inventoryId: snowflake.generate(),
+				productId,
+				quantity: quantity,
+			});
+		}
+
+		return res.status(201).json(purchase);
 	} catch (error) {
 		console.error(error);
 		return res

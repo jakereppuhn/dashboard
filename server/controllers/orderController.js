@@ -6,7 +6,7 @@ var SnowflakeId = require('snowflake-id').default;
 
 // Get All Orders for a User
 const getOrders = asyncHandler(async (req, res) => {
-	const { limit = 10, page = 1, type, startDate, endDate } = req.query;
+	const { type, } = req.query;
 	const whereClause = {};
 
 	const currentPage = parseInt(page);

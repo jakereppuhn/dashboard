@@ -2,14 +2,8 @@ const asyncHandler = require('express-async-handler');
 const { Product } = require('../models');
 var SnowflakeId = require('snowflake-id').default;
 
-// Get Product
 const getProductById = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
-
-	if (!req.user) {
-		res.status(401);
-		throw new Error('Not authorized, no user found');
-	}
 
 	const product = await Product.findOne({
 		where: { productId: productId },
@@ -23,39 +17,36 @@ const getProductById = asyncHandler(async (req, res) => {
 	}
 });
 
-// Get Products w/ query params
 const getProducts = asyncHandler(async (req, res) => {
-	const { archived } = req.query;
+	const { archived, limit = 50, page = 1 } = req.query;
+	const whereClause = {};
 
-	let products;
-
-	if (!req.user) {
-		res.status(401);
-		throw new Error('Not authorized, no user found');
-	}
+	console.log(archived);
 
 	if (archived) {
-		products = await Product.findAll({
-			where: { userId: req.user.userId } && { isArchived: archived },
-		});
-	} else {
-		products = await Product.findAll({
-			where: { userId: req.user.userId },
-		});
+		whereClause.isArchived = archived === 'true';
 	}
 
-	res.status(200).json(products);
+	try {
+		const offset = (page - 1) * limit;
+
+		const products = await Product.findAll({
+			where: whereClause,
+			limit: parseInt(limit, 10),
+			offset: offset,
+		});
+
+		return res.status(200).json(products);
+	} catch (error) {
+		console.error(error);
+		return res
+			.status(500)
+			.json({ message: 'An error occurred while retrieving order data' });
+	}
 });
 
-// Create Product
 const createProduct = asyncHandler(async (req, res) => {
 	const { name, description, type, attributes } = req.body;
-
-	if (!req.user) {
-		res.status(401);
-		throw new Error('Not authorized, no user found');
-	}
-	const userId = req.user.userId;
 
 	if (!name) {
 		res.status(400);
@@ -74,12 +65,12 @@ const createProduct = asyncHandler(async (req, res) => {
 
 	const product = await Product.create({
 		productId: snowflake.generate(),
-		userId,
+		userId: req.user.userId,
 		name,
 		description,
-		type: type || 'general',
+		type: type,
 		attributes: attributes || {},
-		isArchived: isArchived || false,
+		isArchived: false,
 	});
 
 	if (product) {
@@ -98,15 +89,9 @@ const createProduct = asyncHandler(async (req, res) => {
 	}
 });
 
-// Update Product
 const updateProduct = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
-	const { productName, productType, productAttributes, isArchived } = req.body;
-
-	if (!req.user) {
-		res.status(401);
-		throw new Error('Not authorized, no user found');
-	}
+	const { name, description, type, attributes, isArchived } = req.body;
 
 	const product = await Product.findOne({ where: { productId: productId } });
 
@@ -116,19 +101,16 @@ const updateProduct = asyncHandler(async (req, res) => {
 	}
 
 	const updatedProduct = await product.update({
-		productName: productName !== undefined ? productName : product.productName,
-		productType: productType !== undefined ? productType : product.productType,
-		productAttributes:
-			productAttributes !== undefined
-				? productAttributes
-				: product.productAttributes,
+		name: name !== undefined ? name : product.name,
+		description: description !== undefined ? description : product.description,
+		type: type !== undefined ? type : product.type,
+		attributes: attributes !== undefined ? attributes : product.attributes,
 		isArchived: isArchived !== undefined ? isArchived : product.isArchived,
 	});
 
 	res.status(200).json(updatedProduct);
 });
 
-// Delete Product
 const deleteProduct = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
 	const product = await Product.findOne({ where: { productId: productId } });

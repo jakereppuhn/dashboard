@@ -10,10 +10,14 @@ const { protect } = require('../middleware/authMiddleware.js');
 
 const router = express.Router();
 
-router.get('/:productId', protect, getProductById);
 router.get('/', protect, getProducts);
+
+router.get('/:productId', protect, getProductById);
+
 router.post('/', protect, createProduct);
+
 router.put('/:productId', protect, updateProduct);
+
 router.delete('/:productId', protect, deleteProduct);
 
 module.exports = router;

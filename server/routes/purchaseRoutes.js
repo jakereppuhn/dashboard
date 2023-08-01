@@ -5,6 +5,7 @@ const {
 	getPurchases,
 	getPurchasesByProduct,
 	createPurchase,
+	updatePurchase,
 	deletePurchase,
 } = require('../controllers/purchaseController.js');
 
@@ -15,6 +16,8 @@ router.get('/purchase/:purchaseId', protect, getPurchase);
 router.delete('/purchase/:purchaseId', protect, deletePurchase);
 
 router.get('/', protect, getPurchases);
+
+router.put('/purchase/:purchaseId', protect, updatePurchase);
 
 router.post('/product/:productId', protect, createPurchase);
 

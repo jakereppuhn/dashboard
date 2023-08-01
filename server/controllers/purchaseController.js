@@ -1,8 +1,26 @@
 const asyncHandler = require('express-async-handler');
 const { Purchase, Product, Inventory, OrderDetail } = require('../models');
-const { Op } = require('sequelize');
-const Sequelize = require('sequelize');
+const { Op, Sequelize } = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
+
+const getPurchase = asyncHandler(async (req, res) => {
+	const { purchaseId } = req.params;
+
+	if (!req.user) {
+		throw new Error('Not authorized, no user found');
+	}
+
+	const purchase = await Purchase.findOne({
+		where: { purchaseId: purchaseId },
+		include: [{ model: Product, as: 'product', attributes: ['name'] }],
+	});
+
+	if (!purchase) {
+		return res.status(404).json({ message: 'Purchase not found' });
+	}
+
+	return res.status(200).json(purchase);
+});
 
 const getPurchases = asyncHandler(async (req, res) => {
 	const { on, from, to, limit = 50, page = 1 } = req.query;
@@ -36,24 +54,6 @@ const getPurchases = asyncHandler(async (req, res) => {
 	});
 
 	return res.status(200).json(purchases);
-});
-
-const getPurchase = asyncHandler(async (req, res) => {
-	const { purchaseId } = req.params;
-
-	if (!req.user) {
-		throw new Error('Not authorized, no user found');
-	}
-
-	const purchase = await Purchase.findOne({
-		where: { purchaseId: purchaseId },
-	});
-
-	if (!purchase) {
-		return res.status(404).json({ message: 'Purchase not found' });
-	}
-
-	return res.status(200).json(purchase);
 });
 
 const getPurchasesByProduct = asyncHandler(async (req, res) => {
@@ -124,7 +124,74 @@ const createPurchase = asyncHandler(async (req, res) => {
 	return res.status(201).json(purchase);
 });
 
-const updatePurchase = asyncHandler(async (req, res) => {});
+const updatePurchase = asyncHandler(async (req, res) => {
+	const { purchaseId } = req.params;
+
+	if (!purchaseId) {
+		res.status(400);
+		throw new Error('Purchase ID is required');
+	}
+
+	const newPurchaseDetails = req.body;
+
+	await Purchase.sequelize.transaction(async (transaction) => {
+		const purchase = await Purchase.findOne({
+			where: { purchaseId },
+			transaction,
+		});
+
+		if (!purchase) {
+			throw new Error('Purchase not found');
+		}
+
+		const inventoryItem = await Inventory.findOne({
+			where: { productId: purchase.productId },
+			transaction,
+		});
+
+		if (!inventoryItem) {
+			throw new Error('Inventory item not found');
+		}
+
+		const quantityChange = newPurchaseDetails.quantity - purchase.quantity;
+
+		if (inventoryItem.quantity - quantityChange < 0) {
+			throw new Error('Not enough stock in inventory');
+		}
+
+		inventoryItem.quantity -= quantityChange;
+		await inventoryItem.save({ transaction });
+
+		for (const key in newPurchaseDetails) {
+			purchase[key] = newPurchaseDetails[key];
+		}
+		purchase.totalCost =
+			newPurchaseDetails.pricePerUnit * newPurchaseDetails.quantity;
+		purchase.totalPurchaseCost =
+			purchase.totalCost +
+			newPurchaseDetails.shippingCost +
+			newPurchaseDetails.taxAmount +
+			newPurchaseDetails.otherFees;
+
+		await purchase.save({ transaction });
+
+		if (quantityChange !== 0) {
+			const orderDetail = await OrderDetail.findOne(
+				{ where: { purchaseId } },
+				{ transaction }
+			);
+			if (orderDetail) {
+				orderDetail.quantity = newPurchaseDetails.quantity;
+				orderDetail.pricePerUnit = newPurchaseDetails.pricePerUnit;
+				orderDetail.totalCost =
+					newPurchaseDetails.quantity * newPurchaseDetails.pricePerUnit;
+				await orderDetail.save({ transaction });
+			}
+		}
+	});
+
+	return res.status(200).json({ message: 'Purchase updated successfully' });
+});
 
 const deletePurchase = asyncHandler(async (req, res) => {
 	const { purchaseId } = req.params;
@@ -152,9 +219,9 @@ const deletePurchase = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+	getPurchase,
 	getPurchases,
 	getPurchasesByProduct,
-	getPurchase,
 	createPurchase,
 	updatePurchase,
 	deletePurchase,

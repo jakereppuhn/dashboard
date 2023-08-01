@@ -2,7 +2,7 @@ const asyncHandler = require('express-async-handler');
 const { Product, Inventory } = require('../models');
 var SnowflakeId = require('snowflake-id').default;
 
-const getProductById = asyncHandler(async (req, res) => {
+const getProduct = asyncHandler(async (req, res) => {
 	const { productId } = req.params;
 
 	const product = await Product.findOne({
@@ -101,7 +101,7 @@ const deleteProduct = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-	getProductById,
+	getProduct,
 	getProducts,
 	createProduct,
 	updateProduct,

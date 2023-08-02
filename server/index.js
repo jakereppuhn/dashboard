@@ -17,10 +17,12 @@ app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
 const purchaseRoutes = require('./routes/purchaseRoutes');
+const saleRoutes = require('./routes/saleRoutes');
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/purchases', purchaseRoutes);
+app.use('/api/v1/sales', saleRoutes);
 
 sequelize
 	.sync()

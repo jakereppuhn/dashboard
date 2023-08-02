@@ -6,10 +6,6 @@ var SnowflakeId = require('snowflake-id').default;
 const getPurchase = asyncHandler(async (req, res) => {
 	const { purchaseId } = req.params;
 
-	if (!req.user) {
-		throw new Error('Not authorized, no user found');
-	}
-
 	const purchase = await Purchase.findOne({
 		where: { purchaseId: purchaseId },
 		include: [{ model: Product, as: 'product', attributes: ['name'] }],
@@ -88,22 +84,17 @@ const createPurchase = asyncHandler(async (req, res) => {
 		offset: (2019 - 1970) * 31536000 * 1000,
 	});
 
-	if (!req.user) {
-		return res.status(401).json({ message: 'Not authorized, no user found' });
-	}
-
 	const purchase = await Purchase.create({
 		purchaseId: snowflake.generate(),
 		userId: req.user.userId,
-		productId: productId,
-		quantity: quantity,
-		quantityRemaining: quantity,
-		purchaseDate: purchaseDate,
-		pricePerUnit: pricePerUnit,
+		productId,
+		quantity,
+		purchaseDate,
+		pricePerUnit,
 		totalCost: pricePerUnit * quantity,
-		shippingCost: shippingCost,
-		taxAmount: taxAmount,
-		otherFees: otherFees,
+		shippingCost,
+		taxAmount,
+		otherFees,
 		totalPurchaseCost:
 			pricePerUnit * quantity + shippingCost + taxAmount + otherFees,
 	});

@@ -89,6 +89,7 @@ const createPurchase = asyncHandler(async (req, res) => {
 		userId: req.user.userId,
 		productId,
 		quantity,
+		quantityRemaining: quantity,
 		purchaseDate,
 		pricePerUnit,
 		totalCost: pricePerUnit * quantity,

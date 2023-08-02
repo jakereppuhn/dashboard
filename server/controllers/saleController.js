@@ -1,5 +1,11 @@
 const asyncHandler = require('express-async-handler');
-const { Sale, Product, Inventory, OrderDetail } = require('../models');
+const {
+	Sale,
+	Purchase,
+	Product,
+	Inventory,
+	OrderDetail,
+} = require('../models');
 const { Op, Sequelize } = require('sequelize');
 var SnowflakeId = require('snowflake-id').default;
 
@@ -83,7 +89,25 @@ const createSale = asyncHandler(async (req, res) => {
 		offset: (2019 - 1970) * 31536000 * 1000,
 	});
 
-	console.log(req.body);
+	if (quantity <= 0) {
+		return res.status(400).json({ message: 'Invalid quantity' });
+	}
+
+	const inventoryItem = await Inventory.findOne({
+		where: { productId: productId },
+	});
+
+	if (!inventoryItem) {
+		return res.status(404).json({ message: 'No inventory records' });
+	}
+
+	if (inventoryItem.quantity < quantity) {
+		return res.status(400).json({ message: 'Not enough inventory' });
+	}
+
+	inventoryItem.quantity -= quantity;
+
+	await inventoryItem.save();
 
 	const sale = await Sale.create({
 		saleId: snowflake.generate(),
@@ -98,40 +122,58 @@ const createSale = asyncHandler(async (req, res) => {
 		platformFees,
 		otherFees,
 		totalSaleRevenue:
-			pricePerUnit * quantity +
-			shippingCost +
-			taxAmount +
-			platformFees +
+			pricePerUnit * quantity -
+			shippingCost -
+			taxAmount -
+			platformFees -
 			otherFees,
 	});
 
-	const inventoryItem = await Inventory.findOne({
+	const purchases = await Purchase.findAll({
 		where: { productId: productId },
+		quantity: { [Op.gt]: 0 },
+		order: [['purchaseDate', 'ASC']],
 	});
 
-	if (!inventoryItem) {
-		return res.status(404).json({ message: 'Inventory item not found' });
+	let remainingQuantity = quantity;
+
+	for (const purchase of purchases) {
+		if (remainingQuantity <= 0) break;
+
+		let quantityTracker = 0;
+
+		if (purchase.quantityRemaining >= remainingQuantity) {
+			quantityTracker = remainingQuantity;
+			purchase.quantityRemaining -= remainingQuantity;
+			remainingQuantity = 0;
+		} else {
+			quantityTracker = purchase.quantityRemaining;
+			remainingQuantity -= purchase.quantityRemaining;
+			purchase.quantityRemaining = 0;
+		}
+
+		if (quantityTracker > 0) {
+			const detailData = {
+				orderDetailId: snowflake.generate(),
+				purchaseId: purchase.purchaseId,
+				saleId: sale.saleId,
+				quantity: quantityTracker,
+				pricePerUnit: purchase.totalPurchaseCost / purchase.quantity,
+				totalCost:
+					(purchase.totalPurchaseCost / purchase.quantity) * quantityTracker,
+			};
+
+			await OrderDetail.create(detailData);
+		}
+
+		await purchase.save();
 	}
 
-	if (inventoryItem.quantity < quantity) {
-		return res.status(400).json({ message: 'Not enough inventory' });
+	if (remainingQuantity > 0) {
+		return res
+			.status(400)
+			.json({ message: 'Not enough inventory in purchases' });
 	}
-
-	inventoryItem.quantity -= quantity;
-
-	await inventoryItem.save();
-
-	const orderDetail = await OrderDetail.findOne({
-		where: { productId: productId },
-	});
-
-	if (!orderDetail) {
-		return res.status(404).json({ message: 'Order detail not found' });
-	}
-
-	orderDetail.quantity -= quantity;
-
-	await orderDetail.save();
 
 	return res.status(201).json(sale);
 });
